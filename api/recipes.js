@@ -1,4 +1,4 @@
-const DB_ID = "adf9da1a986c4b2da0bce2ee88c8f192";
+const DB_ID = "252e8d34ac9242afbedfcfbd7f3a4e9d";
 
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -20,7 +20,7 @@ export default async function handler(req, res) {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
-          "Notion-Version": "2025-09-03",
+          "Notion-Version": "2022-06-28",
           "Content-Type": "application/json",
         },
         body: JSON.stringify(body),
