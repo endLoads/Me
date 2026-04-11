@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Рецепты</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg: #FAF9F7;
+    --card: #FFFFFF;
+    --text: #1A1A1A;
+    --muted: #888;
+    --border: #E8E4DF;
+    --accent: #D4611A;
+    --radius: 14px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1A1A1A;
+      --card: #252525;
+      --text: #F0EDE8;
+      --muted: #888;
+      --border: #333;
+      --accent: #E07A3A;
+    }
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  .header {
+    padding: 16px 16px 0;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  h1 {
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  .count {
+    font-size: 12px;
+    color: var(--muted);
+    background: var(--bg);
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  .search-wrap {
+    margin-bottom: 10px;
+  }
+
+  .search {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--bg);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+  }
+
+  .search:focus { border-color: var(--accent); }
+
+  .tabs {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 12px;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+
+  .tab {
+    flex-shrink: 0;
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text);
+    font-size: 12px;
+    font-family: inherit;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s;
+  }
+
+  .tab.active {
+    background: var(--text);
+    color: var(--card);
+    border-color: transparent;
+  }
+
+  .content {
+    padding: 12px 16px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .list { display: flex; flex-direction: column; gap: 8px; }
+
+  .recipe-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .card-header {
+    padding: 14px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    user-select: none;
+  }
+
+  .card-title { font-size: 14px; font-weight: 500; flex: 1; line-height: 1.3; }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .badge {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: var(--bg);
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .chevron {
+    font-size: 10px;
+    color: var(--muted);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+  .chevron.open { transform: rotate(180deg); }
+
+  .card-body {
+    border-top: 1px solid var(--border);
+    padding: 14px 16px;
+    display: none;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .card-body.open { display: flex; }
+
+  .sec-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .ing-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 4px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .ing-row:last-child { border-bottom: none; }
+  .ing-amt { font-weight: 500; min-width: 80px; color: var(--muted); font-size: 12px; }
+
+  .step {
+    display: flex;
+    gap: 10px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .step:last-child { border-bottom: none; }
+  .step-n { font-weight: 600; color: var(--muted); min-width: 18px; padding-top: 1px; font-size: 12px; }
+
+  .timers { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  .timer {
+    background: var(--bg);
+    border-radius: 10px;
+    padding: 12px 14px;
+    min-width: 150px;
+    flex: 1;
+  }
+
+  .timer-label { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+
+  .timer-display {
+    font-size: 26px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    transition: color 0.2s;
+  }
+  .timer-display.running { color: #2A7A4B; }
+  .timer-display.done { color: var(--accent); }
+
+  .timer-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+
+  .tbtn {
+    padding: 5px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 12px;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .tbtn:active { opacity: 0.6; }
+
+  .presets { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+  .preset {
+    padding: 3px 8px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-family: inherit;
+    font-size: 11px;
+    cursor: pointer;
+  }
+  .preset:active { background: var(--border); }
+
+  .note {
+    background: #FFF8F2;
+    border-left: 3px solid var(--accent);
+    padding: 10px 12px;
+    border-radius: 0 8px 8px 0;
+    font-size: 12px;
+    line-height: 1.6;
+    color: #666;
+  }
+  @media (prefers-color-scheme: dark) {
+    .note { background: #2A2218; color: #aaa; }
+  }
+
+  .loading {
+    text-align: center;
+    padding: 50px 20px;
+    color: var(--muted);
+  }
+
+  .spinner {
+    width: 28px;
+    height: 28px;
+    border: 2px solid var(--border);
+    border-top-color: var(--text);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 14px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .empty {
+    text-align: center;
+    padding: 30px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .error {
+    background: #FFF0F0;
+    border: 1px solid #FFCCCC;
+    border-radius: 12px;
+    padding: 16px;
+    font-size: 13px;
+    color: #C00;
+    margin: 12px 0;
+    line-height: 1.6;
+  }
+  @media (prefers-color-scheme: dark) {
+    .error { background: #2A1818; color: #FF8888; border-color: #4A2222; }
+  }
+
+  .retry {
+    display: block;
+    margin: 12px auto 0;
+    padding: 8px 24px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 13px;
+    cursor: pointer;
+  }
+
+  .loading-inline {
+    padding: 20px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .loading-inline .spinner { width: 20px; height: 20px; margin-bottom: 8px; }
+
+  .af-info {
+    background: var(--bg);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <h1>🍽 Рецепты</h1>
+    <span class="count" id="count"></span>
+  </div>
+  <div class="search-wrap">
+    <input type="search" class="search" id="search" placeholder="Поиск..." oninput="filterRecipes()">
+  </div>
+  <div class="tabs" id="tabs"></div>
+</div>
+
+<div class="content">
+  <div id="main">
+    <div class="loading">
+      <div class="spinner"></div>
+      Загружаем рецепты из Notion...
+    </div>
+  </div>
+</div>
+
+<script>
+// ── НАСТРОЙКИ ─────────────────────────────────────────────────────────────
+// Замени на свой URL после деплоя на Vercel, например:
+// const API = "https://menus-abc123.vercel.app";
+const API = window.location.origin;
+// ──────────────────────────────────────────────────────────────────────────
+
+const CATS = [
+  "Все",
+  "🧒 Детские",
+  "🍲 Супы",
+  "🍽 Основные",
+  "🥄 Соусы",
+  "🔥 Аэрогриль взрослые",
+  "🌅 Завтраки",
+  "🍎 Перекусы",
+  "🌙 Ужины взрослые",
+];
+
+let allRecipes = [];
+let activeCat = "Все";
+let searchQ = "";
+let openCards = {};
+let pageCache = {};
+let timerState = {};
+let timerIntervals = {};
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+
+async function init() {
+  renderTabs();
+  await loadRecipes();
+}
+
+// ── TABS ─────────────────────────────────────────────────────────────────
+
+function renderTabs() {
+  const el = document.getElementById("tabs");
+  el.innerHTML = "";
+  CATS.forEach(c => {
+    const b = document.createElement("button");
+    b.className = "tab" + (c === activeCat ? " active" : "");
+    b.textContent = c;
+    b.onclick = () => { activeCat = c; renderTabs(); renderList(); };
+    el.appendChild(b);
+  });
+}
+
+// ── LOAD RECIPES ──────────────────────────────────────────────────────────
+
+async function loadRecipes() {
+  const main = document.getElementById("main");
+  main.innerHTML = `<div class="loading"><div class="spinner"></div>Загружаем из Notion...</div>`;
+
+  try {
+    const r = await fetch(`${API}/api/recipes`);
+    if (!r.ok) throw new Error(`HTTP ${r.status}: ${await r.text()}`);
+    allRecipes = await r.json();
+    renderList();
+  } catch(e) {
+    main.innerHTML = `
+      <div class="error">
+        <b>Ошибка загрузки</b><br>${e.message}
+      </div>
+      <button class="retry" onclick="loadRecipes()">Повторить</button>`;
+  }
+}
+
+// ── FILTER ────────────────────────────────────────────────────────────────
+
+function filterRecipes() {
+  searchQ = document.getElementById("search").value.toLowerCase().trim();
+  renderList();
+}
+
+function getFiltered() {
+  return allRecipes.filter(r => {
+    const catOk = activeCat === "Все" || r.cat === activeCat;
+    const qOk = !searchQ || r.title.toLowerCase().includes(searchQ);
+    return catOk && qOk;
+  });
+}
+
+// ── RENDER LIST ───────────────────────────────────────────────────────────
+
+function renderList() {
+  const main = document.getElementById("main");
+  const filtered = getFiltered();
+
+  const cnt = document.getElementById("count");
+  cnt.textContent = `${filtered.length} рецептов`;
+
+  if (!filtered.length) {
+    main.innerHTML = `<div class="empty">Ничего не найдено</div>`;
+    return;
+  }
+
+  const list = document.createElement("div");
+  list.className = "list";
+  filtered.forEach(r => list.appendChild(buildCard(r)));
+  main.innerHTML = "";
+  main.appendChild(list);
+}
+
+// ── BUILD CARD ────────────────────────────────────────────────────────────
+
+function buildCard(r) {
+  const card = document.createElement("div");
+  card.className = "recipe-card";
+  card.id = "card-" + r.id;
+
+  const isOpen = !!openCards[r.id];
+
+  const header = document.createElement("div");
+  header.className = "card-header";
+  header.onclick = () => toggleCard(r.id);
+  header.innerHTML = `
+    <div class="card-title">${r.title}</div>
+    <div class="card-meta">
+      ${r.time ? `<span class="badge">${r.time}</span>` : ""}
+      <span class="chevron ${isOpen ? "open" : ""}">▼</span>
+    </div>
+  `;
+
+  const body = document.createElement("div");
+  body.className = "card-body" + (isOpen ? " open" : "");
+  body.id = "body-" + r.id;
+
+  if (isOpen) {
+    const cached = pageCache[r.id];
+    body.innerHTML = cached ? renderBodyHTML(r.id, cached) : loadingInline();
+  }
+
+  card.appendChild(header);
+  card.appendChild(body);
+  return card;
+}
+
+function loadingInline() {
+  return `<div class="loading-inline"><div class="spinner"></div>Загружаем рецепт...</div>`;
+}
+
+// ── TOGGLE CARD ───────────────────────────────────────────────────────────
+
+async function toggleCard(id) {
+  openCards[id] = !openCards[id];
+
+  const body = document.getElementById("body-" + id);
+  const chv = document.querySelector("#card-" + id + " .chevron");
+  if (!body) return;
+
+  if (openCards[id]) {
+    body.classList.add("open");
+    if (chv) chv.classList.add("open");
+    if (!pageCache[id]) {
+      body.innerHTML = loadingInline();
+      await loadPage(id);
+      body.innerHTML = renderBodyHTML(id, pageCache[id]);
+    }
+  } else {
+    body.classList.remove("open");
+    if (chv) chv.classList.remove("open");
+  }
+}
+
+// ── LOAD PAGE CONTENT ─────────────────────────────────────────────────────
+
+async function loadPage(id) {
+  try {
+    const r = await fetch(`${API}/api/page?id=${id}`);
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const data = await r.json();
+    pageCache[id] = parseBlocks(data.lines || []);
+  } catch(e) {
+    pageCache[id] = { error: e.message, lines: [], steps: [], timers: [] };
+  }
+}
+
+// ── PARSE NOTION BLOCKS ───────────────────────────────────────────────────
+
+function parseBlocks(lines) {
+  const result = { kbju: null, ingredients: [], steps: [], timers: [], note: null, tableRows: [] };
+
+  let inSteps = false;
+  let inIng = false;
+  let inTable = false;
+  let stepCount = 0;
+
+  lines.forEach((l, i) => {
+    const t = l.text;
+    const type = l.type;
+
+    // КБЖУ — ищем в первом параграфе
+    if (!result.kbju && t.match(/ккал|КБЖУ/i)) {
+      const nums = t.match(/[\d.]+/g);
+      if (nums && nums.length >= 4) {
+        result.kbju = { kcal: nums[0], p: nums[1], f: nums[2], c: nums[3] };
+      }
+    }
+
+    // Таблица — ингредиенты обычно идут как table rows
+    if (type === "table_row") {
+      inTable = true;
+      const cells = l.cells || [];
+      if (cells.length >= 2) {
+        const name = cells[0];
+        const amount = cells[1];
+        if (name && !name.match(/ингредиент|количество/i)) {
+          result.ingredients.push({ name, amount });
+        }
+      }
+      return;
+    }
+
+    // Секция ингредиенты
+    if (t.match(/^ингредиент/i) || t.match(/^состав/i)) {
+      inIng = true; inSteps = false; inTable = false; return;
+    }
+
+    // Секция приготовление
+    if (t.match(/^приготовление|^шаги|^способ|^как готовить/i)) {
+      inSteps = true; inIng = false; inTable = false; return;
+    }
+
+    // Numbered list items → шаги
+    if (type === "numbered_list_item") {
+      stepCount++;
+      result.steps.push(t);
+      // Ищем таймеры в тексте шага
+      const minMatch = t.match(/(\d+)[\s–-]*(\d+)?\s*мин/i);
+      if (minMatch) {
+        const mins = parseInt(minMatch[1]);
+        if (mins >= 1 && mins <= 120 && result.timers.length < 4) {
+          result.timers.push({ label: t.slice(0, 40) + (t.length > 40 ? "…" : ""), min: mins });
+        }
+      }
+      return;
+    }
+
+    // Bulleted list → ингредиенты или шаги
+    if (type === "bulleted_list_item") {
+      if (inIng || (!inSteps && !stepCount)) {
+        // Пытаемся разбить на количество и название
+        const m = t.match(/^([\d.,]+\s*(?:г|мл|шт|ст\.л|ч\.л|кг|л|стакан|пучок|зубчик)[^\s]*\s*(?:\(.*?\))?)\s*[—–-]?\s*(.+)$/i);
+        if (m) {
+          result.ingredients.push({ amount: m[1].trim(), name: m[2].trim() });
+        } else {
+          result.ingredients.push({ amount: "", name: t });
+        }
+      } else {
+        result.steps.push(t);
+      }
+      return;
+    }
+
+    // Note / callout
+    if (type === "callout" || (type === "paragraph" && (t.startsWith("💡") || t.startsWith("⚠️") || t.startsWith("ℹ️")))) {
+      result.note = t;
+      return;
+    }
+
+    // Параметры аэрогриля / таблица параметров
+    if (t.match(/параметры|°C|Температура|Время:/i) && !result.timers.length) {
+      const minMatch = t.match(/(\d+)[\s–-]*(\d+)?\s*мин/i);
+      if (minMatch) {
+        result.timers.push({ label: "Таймер", min: parseInt(minMatch[1]) });
+      }
+    }
+  });
+
+  return result;
+}
+
+// ── RENDER BODY ───────────────────────────────────────────────────────────
+
+function renderBodyHTML(id, content) {
+  if (!content) return `<div class="empty">Нет данных</div>`;
+  if (content.error) return `<div class="error">${content.error}</div>`;
+
+  let html = "";
+
+  // КБЖУ
+  if (content.kbju) {
+    html += `<div>
+      <div class="sec-label">КБЖУ на порцию</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <div class="kbju-item"><div style="font-size:16px;font-weight:500">${content.kbju.kcal}</div><div style="font-size:10px;color:var(--muted)">ккал</div></div>
+        <div class="kbju-item"><div style="font-size:16px;font-weight:500">${content.kbju.p}</div><div style="font-size:10px;color:var(--muted)">белки</div></div>
+        <div class="kbju-item"><div style="font-size:16px;font-weight:500">${content.kbju.f}</div><div style="font-size:10px;color:var(--muted)">жиры</div></div>
+        <div class="kbju-item"><div style="font-size:16px;font-weight:500">${content.kbju.c}</div><div style="font-size:10px;color:var(--muted)">углев.</div></div>
+      </div>
+    </div>`;
+  }
+
+  // Ингредиенты
+  if (content.ingredients.length) {
+    html += `<div><div class="sec-label">Ингредиенты</div>`;
+    content.ingredients.forEach(ing => {
+      html += `<div class="ing-row">
+        <span class="ing-amt">${ing.amount}</span>
+        <span>${ing.name}</span>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  // Шаги
+  if (content.steps.length) {
+    html += `<div><div class="sec-label">Приготовление</div>`;
+    content.steps.forEach((s, i) => {
+      html += `<div class="step"><span class="step-n">${i+1}</span><span>${s}</span></div>`;
+    });
+    html += `</div>`;
+  }
+
+  // Таймеры
+  if (content.timers.length) {
+    html += `<div class="timers">`;
+    content.timers.forEach((t, ti) => {
+      const tid = id + "-" + ti;
+      if (!timerState[tid]) timerState[tid] = { sec: t.min * 60, orig: t.min * 60 };
+      html += timerHTML(tid, t.label);
+    });
+    html += `</div>`;
+  }
+
+  // Заметка
+  if (content.note) {
+    html += `<div class="note">${content.note}</div>`;
+  }
+
+  // Если ничего нет
+  if (!content.ingredients.length && !content.steps.length) {
+    html += `<div class="empty" style="padding:10px 0">Откройте рецепт в Notion для полного текста</div>`;
+  }
+
+  return html;
+}
+
+// ── TIMERS ────────────────────────────────────────────────────────────────
+
+function timerHTML(tid, label) {
+  const s = timerState[tid] || { sec: 600, orig: 600 };
+  return `<div class="timer" id="timer-${tid}">
+    <div class="timer-label">${label}</div>
+    <div class="timer-display" id="disp-${tid}">${fmt(s.sec)}</div>
+    <div class="timer-btns">
+      <button class="tbtn" onclick="startT('${tid}')">▶ Старт</button>
+      <button class="tbtn" onclick="pauseT('${tid}')">⏸</button>
+      <button class="tbtn" onclick="resetT('${tid}')">↺</button>
+    </div>
+    <div class="presets">
+      <button class="preset" onclick="setT('${tid}',5)">5 мин</button>
+      <button class="preset" onclick="setT('${tid}',10)">10 мин</button>
+      <button class="preset" onclick="setT('${tid}',15)">15 мин</button>
+      <button class="preset" onclick="setT('${tid}',20)">20 мин</button>
+      <button class="preset" onclick="setT('${tid}',30)">30 мин</button>
+    </div>
+  </div>`;
+}
+
+function fmt(s) {
+  return String(Math.floor(s/60)).padStart(2,"0") + ":" + String(s%60).padStart(2,"0");
+}
+
+function startT(tid) {
+  if (timerIntervals[tid]) return;
+  const s = timerState[tid];
+  if (!s || s.sec <= 0) return;
+  timerIntervals[tid] = setInterval(() => {
+    if (!timerState[tid]) return;
+    timerState[tid].sec--;
+    const d = document.getElementById("disp-" + tid);
+    if (d) {
+      d.textContent = fmt(timerState[tid].sec);
+      d.className = "timer-display " + (timerState[tid].sec > 0 ? "running" : "done");
+    }
+    if (timerState[tid].sec <= 0) {
+      clearInterval(timerIntervals[tid]);
+      delete timerIntervals[tid];
+      if (Notification.permission === "granted") {
+        new Notification("Таймер", { body: "Время вышло!" });
+      } else {
+        alert("Таймер: время вышло!");
+      }
+    }
+  }, 1000);
+  const d = document.getElementById("disp-" + tid);
+  if (d) d.className = "timer-display running";
+  if (Notification.permission === "default") Notification.requestPermission();
+}
+
+function pauseT(tid) {
+  clearInterval(timerIntervals[tid]);
+  delete timerIntervals[tid];
+  const d = document.getElementById("disp-" + tid);
+  if (d) d.className = "timer-display";
+}
+
+function resetT(tid) {
+  pauseT(tid);
+  if (timerState[tid]) timerState[tid].sec = timerState[tid].orig;
+  const d = document.getElementById("disp-" + tid);
+  if (d) { d.textContent = fmt(timerState[tid].sec); d.className = "timer-display"; }
+}
+
+function setT(tid, min) {
+  pauseT(tid);
+  if (!timerState[tid]) timerState[tid] = { sec: 0, orig: 0 };
+  timerState[tid].sec = min * 60;
+  timerState[tid].orig = min * 60;
+  const d = document.getElementById("disp-" + tid);
+  if (d) { d.textContent = fmt(min * 60); d.className = "timer-display"; }
+}
+
+init();
+</script>
+</body>
+</html>
