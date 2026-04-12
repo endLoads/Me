@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Рецепты</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Nunito+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   TOKENS
+═══════════════════════════════════════════ */
+:root{
+  --bg:       #FAFAF8;
+  --surface:  #FFFFFF;
+  --text:     #1A1A18;
+  --text2:    #5C5C58;
+  --text3:    #9B9B95;
+  --border:   #EBEBЕ6;
+  --accent:   #2D5A27;   /* forest green */
+  --accent-l: #E8F0E7;
+  --accent-t: rgba(45,90,39,.12);
+  --danger:   #C0392B;
+  --warm:     #FBF7F0;
+  --r:        18px;
+  --r-sm:     10px;
+  --shadow:   0 2px 16px rgba(0,0,0,.07);
+  --shadow-lg:0 8px 32px rgba(0,0,0,.12);
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#161614;--surface:#1F1F1C;--text:#F0EFEA;--text2:#A0A09A;
+  --text3:#606058;--border:#2A2A27;--accent:#5C9E55;--accent-l:#1A2B19;
+  --accent-t:rgba(92,158,85,.15);--warm:#1C1B18;
+}}
+
+/* ═══════════════════════════════════════════
+   RESET
+═══════════════════════════════════════════ */
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overscroll-behavior:none}
+body{font-family:'Nunito Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.5}
+button{font-family:inherit;cursor:pointer;border:none;outline:none}
+input{font-family:inherit;outline:none}
+img{display:block;max-width:100%}
+
+/* ═══════════════════════════════════════════
+   LAYOUT
+═══════════════════════════════════════════ */
+.app{display:flex;flex-direction:column;height:100dvh;max-width:430px;margin:0 auto;position:relative;overflow:hidden}
+
+/* ═══════════════════════════════════════════
+   TOP BAR
+═══════════════════════════════════════════ */
+.topbar{
+  padding:16px 20px 0;
+  background:var(--bg);
+  flex-shrink:0;
+  position:relative;
+  z-index:10;
+}
+.topbar-row{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:14px}
+.app-name{
+  font-family:'Playfair Display',serif;
+  font-size:28px;
+  font-weight:700;
+  letter-spacing:-0.5px;
+  line-height:1;
+  color:var(--text)
+}
+.app-name em{color:var(--accent);font-style:italic}
+.recipe-badge{
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.5px;
+  color:var(--text3);
+  padding:3px 10px;
+  background:var(--border);
+  border-radius:20px;
+}
+
+/* SEARCH */
+.search-wrap{
+  display:flex;
+  align-items:center;
+  background:var(--surface);
+  border:1.5px solid var(--border);
+  border-radius:var(--r-sm);
+  padding:0 14px;
+  margin-bottom:14px;
+  transition:border-color .2s;
+}
+.search-wrap:focus-within{border-color:var(--accent)}
+.search-wrap svg{flex-shrink:0;opacity:.35;margin-right:10px}
+.search{
+  flex:1;
+  background:transparent;
+  border:none;
+  font-size:14px;
+  color:var(--text);
+  padding:10px 0;
+}
+.search::placeholder{color:var(--text3)}
+.search-clear{
+  font-size:16px;
+  color:var(--text3);
+  background:transparent;
+  border:none;
+  padding:2px 0 2px 8px;
+  display:none;
+}
+.search-clear.visible{display:block}
+
+/* CATEGORY TABS */
+.cats{
+  display:flex;
+  gap:6px;
+  overflow-x:auto;
+  scrollbar-width:none;
+  padding-bottom:16px;
+}
+.cats::-webkit-scrollbar{display:none}
+.cat{
+  flex-shrink:0;
+  padding:7px 14px;
+  border-radius:20px;
+  background:var(--surface);
+  border:1.5px solid var(--border);
+  color:var(--text2);
+  font-size:13px;
+  font-weight:600;
+  white-space:nowrap;
+  transition:all .15s;
+  letter-spacing:.1px;
+}
+.cat.on{
+  background:var(--accent);
+  border-color:var(--accent);
+  color:#fff;
+}
+
+/* ═══════════════════════════════════════════
+   LIST
+═══════════════════════════════════════════ */
+.scroll-area{
+  flex:1;
+  overflow-y:auto;
+  overflow-x:hidden;
+  padding:0 20px 32px;
+  -webkit-overflow-scrolling:touch;
+}
+.list{display:flex;flex-direction:column;gap:0}
+.section-title{
+  font-family:'Playfair Display',serif;
+  font-size:13px;
+  font-weight:400;
+  font-style:italic;
+  color:var(--text3);
+  padding:20px 0 8px;
+  letter-spacing:.3px;
+}
+
+/* ═══════════════════════════════════════════
+   RECIPE CARD
+═══════════════════════════════════════════ */
+.card{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:14px 0;
+  border-bottom:1px solid var(--border);
+  cursor:pointer;
+  transition:opacity .1s;
+}
+.card:active{opacity:.6}
+.card:last-child{border-bottom:none}
+.card-emoji{
+  width:48px;height:48px;
+  border-radius:14px;
+  background:var(--accent-l);
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;
+  flex-shrink:0;
+}
+.card-body{flex:1;min-width:0}
+.card-title{
+  font-family:'Playfair Display',serif;
+  font-size:16px;
+  font-weight:700;
+  line-height:1.25;
+  margin-bottom:4px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.card-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.pill{
+  font-size:11px;
+  font-weight:600;
+  padding:2px 8px;
+  border-radius:8px;
+  background:var(--border);
+  color:var(--text3);
+  white-space:nowrap;
+}
+.pill.time{background:var(--accent-l);color:var(--accent)}
+.card-arrow{
+  color:var(--text3);
+  font-size:12px;
+  flex-shrink:0;
+}
+
+/* ═══════════════════════════════════════════
+   RECIPE SHEET (bottom sheet)
+═══════════════════════════════════════════ */
+.sheet-overlay{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.4);
+  z-index:100;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .3s;
+}
+.sheet-overlay.open{opacity:1;pointer-events:auto}
+
+.sheet{
+  position:fixed;
+  left:50%;
+  transform:translateX(-50%) translateY(100%);
+  bottom:0;
+  width:100%;
+  max-width:430px;
+  background:var(--surface);
+  border-radius:24px 24px 0 0;
+  z-index:101;
+  display:flex;
+  flex-direction:column;
+  max-height:93dvh;
+  transition:transform .35s cubic-bezier(.25,.46,.45,.94);
+}
+.sheet.open{transform:translateX(-50%) translateY(0)}
+
+.sheet-handle{
+  width:36px;height:4px;
+  background:var(--border);
+  border-radius:2px;
+  margin:12px auto 0;
+  flex-shrink:0;
+}
+.sheet-head{
+  padding:16px 20px 12px;
+  display:flex;align-items:flex-start;gap:14px;
+  flex-shrink:0;
+  border-bottom:1px solid var(--border);
+}
+.sheet-emoji{
+  width:56px;height:56px;
+  border-radius:16px;
+  background:var(--accent-l);
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;
+  flex-shrink:0;
+}
+.sheet-head-info{flex:1;min-width:0}
+.sheet-title{
+  font-family:'Playfair Display',serif;
+  font-size:20px;
+  font-weight:700;
+  line-height:1.2;
+  margin-bottom:6px;
+}
+.sheet-meta{display:flex;gap:6px;flex-wrap:wrap}
+.sheet-close{
+  width:32px;height:32px;
+  border-radius:50%;
+  background:var(--border);
+  color:var(--text2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;
+  flex-shrink:0;
+  align-self:flex-start;
+}
+
+.sheet-body{
+  flex:1;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  padding:0 20px 40px;
+}
+
+/* ═══════════════════════════════════════════
+   RECIPE CONTENT
+═══════════════════════════════════════════ */
+/* КБЖУ */
+.kbju{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin:16px 0;
+}
+.kbju-cell{
+  background:var(--warm);
+  border-radius:var(--r-sm);
+  padding:10px 6px;
+  text-align:center;
+}
+.kbju-val{
+  font-family:'Playfair Display',serif;
+  font-size:18px;
+  font-weight:700;
+  color:var(--accent);
+  line-height:1;
+}
+.kbju-lbl{font-size:10px;color:var(--text3);margin-top:3px;font-weight:600;letter-spacing:.3px;text-transform:uppercase}
+
+/* Section heading */
+.r-sec{padding:16px 0 0}
+.r-sec-title{
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:1.2px;
+  text-transform:uppercase;
+  color:var(--text3);
+  margin-bottom:12px;
+  display:flex;align-items:center;gap:8px;
+}
+.r-sec-title::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* Ingredients */
+.ing-list{display:flex;flex-direction:column}
+.ing-row{
+  display:flex;
+  align-items:baseline;
+  gap:10px;
+  padding:9px 0;
+  border-bottom:1px solid var(--border);
+  font-size:14px;
+}
+.ing-row:last-child{border-bottom:none}
+.ing-amt{
+  min-width:90px;
+  font-size:12px;
+  font-weight:600;
+  color:var(--accent);
+  flex-shrink:0;
+}
+.ing-name{color:var(--text)}
+
+/* Steps */
+.steps{display:flex;flex-direction:column;gap:0}
+.step{
+  display:flex;
+  gap:12px;
+  padding:10px 0;
+  border-bottom:1px solid var(--border);
+}
+.step:last-child{border-bottom:none}
+.step-num{
+  width:24px;height:24px;
+  border-radius:50%;
+  background:var(--accent);
+  color:#fff;
+  font-size:11px;
+  font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  margin-top:2px;
+}
+.step-text{font-size:14px;line-height:1.6;flex:1}
+
+/* Notes */
+.note-block{
+  background:var(--warm);
+  border-left:3px solid var(--accent);
+  border-radius:0 var(--r-sm) var(--r-sm) 0;
+  padding:12px 14px;
+  font-size:13px;
+  color:var(--text2);
+  line-height:1.6;
+  margin-top:12px;
+}
+
+/* Children block */
+.children-block{
+  background:var(--accent-l);
+  border-radius:var(--r-sm);
+  padding:12px 14px;
+  font-size:13px;
+  color:var(--text);
+  line-height:1.7;
+  margin-top:4px;
+  border-left:3px solid var(--accent);
+  border-radius:0 var(--r-sm) var(--r-sm) 0;
+}
+.children-label{
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.5px;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:4px;
+}
+
+/* ═══════════════════════════════════════════
+   TIMERS
+═══════════════════════════════════════════ */
+/* Fixed chip — серый нейтральный */
+.t-chip{
+  display:inline-flex;align-items:center;gap:3px;
+  padding:1px 8px;border-radius:8px;
+  background:var(--accent-l);color:var(--accent);
+  font-size:12px;font-weight:700;
+  border:none;cursor:pointer;
+  font-family:inherit;vertical-align:middle;margin:0 1px;
+  transition:background .1s;
+}
+.t-chip:active{filter:brightness(.9)}
+.t-chip.running{background:#E6F4EA;color:#1B7A30}
+/* Adjustable chip — with pencil */
+.t-chip.adj{background:#FFF3E0;color:#E65100}
+.t-chip.adj.changed{background:#EDE7F6;color:#4527A0}
+.t-chip.adj.running{background:#E6F4EA;color:#1B7A30}
+@media(prefers-color-scheme:dark){
+  .t-chip{background:var(--accent-l);color:var(--accent)}
+  .t-chip.adj{background:#2A1A0A;color:#FFA040}
+  .t-chip.adj.changed{background:#1C1030;color:#BB86FC}
+  .t-chip.running,.t-chip.adj.running{background:#0A2010;color:#66BB6A}
+}
+.itimer{
+  display:none;
+  margin:6px 0 8px 36px;
+  background:var(--warm);
+  border-left:3px solid var(--accent);
+  border-radius:0 var(--r-sm) var(--r-sm) 0;
+  padding:10px 12px;
+}
+.itimer.adj-timer{border-left-color:#E65100}
+.itimer.visible{display:block}
+.it-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.it-display{
+  font-family:'Playfair Display',serif;
+  font-size:26px;font-weight:700;
+  font-variant-numeric:tabular-nums;
+  letter-spacing:2px;
+  color:var(--text);
+  flex:1;
+}
+.it-display.running{color:#1B7A30}
+.it-btns{display:flex;gap:6px}
+.it-btn{
+  width:32px;height:32px;
+  border-radius:var(--r-sm);
+  background:var(--border);
+  color:var(--text2);
+  font-size:12px;
+  display:flex;align-items:center;justify-content:center;
+}
+.it-btn:active{opacity:.6}
+.it-edit{
+  display:flex;align-items:center;gap:8px;
+  padding-top:8px;
+  border-top:1px solid var(--border);
+}
+.it-edit-inp{
+  width:56px;padding:4px 8px;
+  border:1.5px solid var(--border);border-radius:var(--r-sm);
+  background:var(--surface);color:var(--text);
+  font-family:inherit;font-size:13px;text-align:center;
+}
+.it-edit-inp:focus{border-color:var(--accent)}
+.it-lbl{font-size:12px;color:var(--text3)}
+.it-save{
+  padding:4px 12px;border-radius:var(--r-sm);
+  background:var(--accent);color:#fff;
+  font-size:12px;font-weight:600;
+}
+.it-reset{
+  padding:4px 10px;border-radius:var(--r-sm);
+  background:var(--border);color:var(--text2);
+  font-size:12px;
+}
+
+/* ═══════════════════════════════════════════
+   STATES
+═══════════════════════════════════════════ */
+.state{padding:60px 20px;text-align:center;color:var(--text3)}
+.state-icon{font-size:40px;margin-bottom:12px}
+.state-text{font-size:14px;line-height:1.5}
+.spin{width:24px;height:24px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:s .7s linear infinite;margin:0 auto 10px}
+@keyframes s{to{transform:rotate(360deg)}}
+.err-box{
+  margin:20px;
+  padding:14px;
+  background:#FEF2F2;
+  border:1px solid #FECACA;
+  border-radius:var(--r);
+  font-size:13px;
+  color:var(--danger);
+  line-height:1.6;
+}
+.retry-btn{
+  display:block;margin:12px auto 0;
+  padding:8px 20px;border-radius:var(--r-sm);
+  border:1.5px solid var(--border);
+  background:var(--surface);color:var(--text);
+  font-size:13px;font-weight:600;
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-row">
+      <div class="app-name">Книга <em>рецептов</em></div>
+      <div class="recipe-badge" id="cnt">…</div>
+    </div>
+    <div class="search-wrap">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input class="search" type="search" id="q" placeholder="Поиск по рецептам…" oninput="onSearch(this.value)">
+      <button class="search-clear" id="qclear" onclick="clearSearch()">✕</button>
+    </div>
+    <div class="cats" id="cats"></div>
+  </div>
+
+  <!-- LIST -->
+  <div class="scroll-area" id="scroll">
+    <div class="list" id="list">
+      <div class="state"><div class="spin"></div><div class="state-text">Загружаем рецепты…</div></div>
+    </div>
+  </div>
+
+  <!-- RECIPE SHEET -->
+  <div class="sheet-overlay" id="overlay" onclick="closeSheet()"></div>
+  <div class="sheet" id="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-head" id="sheet-head">
+      <div class="sheet-emoji" id="sh-emoji">🍽</div>
+      <div class="sheet-head-info">
+        <div class="sheet-title" id="sh-title">—</div>
+        <div class="sheet-meta" id="sh-meta"></div>
+      </div>
+      <button class="sheet-close" onclick="closeSheet()">✕</button>
+    </div>
+    <div class="sheet-body" id="sheet-body">
+      <div class="state"><div class="spin"></div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── CONFIG ── */
+const CATS_DEF=[
+  {k:'Все',e:''},
+  {k:'Детские',e:'🧒',full:'🧒 Детские'},
+  {k:'Супы',e:'🍲',full:'🍲 Супы'},
+  {k:'Основные',e:'🍽',full:'🍽 Основные'},
+  {k:'Соусы',e:'🥄',full:'🥄 Соусы'},
+  {k:'Аэрогриль',e:'🔥',full:'🔥 Аэрогриль взрослые'},
+  {k:'Завтраки',e:'🌅',full:'🌅 Завтраки'},
+  {k:'Перекусы',e:'🍎',full:'🍎 Перекусы'},
+  {k:'Ужины',e:'🌙',full:'🌙 Ужины взрослые'},
+];
+const CAT_EMOJI={'🧒 Детские':'🧒','🍲 Супы':'🍲','🍽 Основные':'🍽','🥄 Соусы':'🥄','🔥 Аэрогриль взрослые':'🔥','🌅 Завтраки':'🌅','🍎 Перекусы':'🍎','🌙 Ужины взрослые':'🌙'};
+const LS=id=>'rt2_'+id;
+
+/* ── STATE ── */
+let ALL=[],CAT='Все',Q='';
+let openId=null;
+let cache={};
+const TS={};let cc=0;
+
+/* ── INIT ── */
+async function init(){renderCats();await loadAll();}
+
+/* ── CATS ── */
+function renderCats(){
+  const el=document.getElementById('cats');el.innerHTML='';
+  CATS_DEF.forEach(c=>{
+    const b=document.createElement('button');
+    b.className='cat'+(c.k===CAT?' on':'');
+    b.textContent=c.k==='Все'?'🍳 Все':c.e+' '+c.k;
+    b.onclick=()=>{CAT=c.k;renderCats();renderList();};
+    el.appendChild(b);
+  });
+}
+
+/* ── LOAD ── */
+async function loadAll(){
+  try{
+    const r=await fetch('/api/recipes');
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    ALL=await r.json();renderList();
+  }catch(e){
+    document.getElementById('list').innerHTML='<div class="err-box"><b>Ошибка загрузки:</b> '+e.message+'</div><button class="retry-btn" onclick="loadAll()">Повторить</button>';
+  }
+}
+
+/* ── SEARCH ── */
+function onSearch(v){
+  Q=v.toLowerCase().trim();
+  document.getElementById('qclear').className='search-clear'+(Q?' visible':'');
+  renderList();
+}
+function clearSearch(){
+  document.getElementById('q').value='';
+  onSearch('');
+}
+
+/* ── FILTER ── */
+function getFiltered(){
+  const catDef=CATS_DEF.find(c=>c.k===CAT);
+  const catFull=catDef?catDef.full||'':'';
+  return ALL.filter(r=>{
+    const co=CAT==='Все'||r.cat===catFull;
+    const qo=!Q||cleanTitle(r.title).toLowerCase().includes(Q);
+    return co&&qo;
+  }).sort((a,b)=>cleanTitle(a.title).localeCompare(cleanTitle(b.title),'ru',{numeric:true,sensitivity:'base'}));
+}
+
+/* Strip leading numbers like "1.1 ", "1.12 ", "3. " from display */
+function cleanTitle(t){return(t||'').replace(/^\d+\.?\d*\s+/,'').trim();}
+
+/* ── RENDER LIST ── */
+function renderList(){
+  const items=getFiltered();
+  document.getElementById('cnt').textContent=items.length+' рецептов';
+  const el=document.getElementById('list');
+  if(!items.length){
+    el.innerHTML='<div class="state"><div class="state-icon">🔍</div><div class="state-text">Ничего не найдено</div></div>';
+    return;
+  }
+  el.innerHTML='';
+  items.forEach(r=>el.appendChild(buildCard(r)));
+}
+
+function buildCard(r){
+  const d=document.createElement('div');
+  d.className='card';
+  d.onclick=()=>openSheet(r);
+  const icon=CAT_EMOJI[r.cat]||'🍽';
+  const tags=[];
+  if(r.time)tags.push('<span class="pill time">⏱ '+r.time+'</span>');
+  if(r.who&&r.who.length)r.who.forEach(w=>tags.push('<span class="pill">'+w+'</span>'));
+  d.innerHTML=
+    '<div class="card-emoji">'+icon+'</div>'+
+    '<div class="card-body">'+
+      '<div class="card-title">'+cleanTitle(r.title)+'</div>'+
+      '<div class="card-meta">'+tags.join('')+'</div>'+
+    '</div>'+
+    '<div class="card-arrow">›</div>';
+  return d;
+}
+
+/* ── SHEET ── */
+async function openSheet(r){
+  openId=r.id;
+  // Header
+  const icon=CAT_EMOJI[r.cat]||'🍽';
+  document.getElementById('sh-emoji').textContent=icon;
+  document.getElementById('sh-title').textContent=cleanTitle(r.title);
+  const meta=[];
+  if(r.time)meta.push('<span class="pill time">⏱ '+r.time+'</span>');
+  if(r.who&&r.who.length)r.who.forEach(w=>meta.push('<span class="pill">'+w+'</span>'));
+  document.getElementById('sh-meta').innerHTML=meta.join('');
+  // Show
+  document.getElementById('overlay').classList.add('open');
+  document.getElementById('sheet').classList.add('open');
+  document.body.style.overflow='hidden';
+  // Body
+  const body=document.getElementById('sheet-body');
+  if(cache[r.id]){body.innerHTML=renderRecipe(r.id,cache[r.id]);}
+  else{
+    body.innerHTML='<div class="state" style="padding:40px 0"><div class="spin"></div></div>';
+    await loadPage(r.id);
+    if(openId===r.id)body.innerHTML=renderRecipe(r.id,cache[r.id]);
+  }
+  body.scrollTop=0;
+}
+
+function closeSheet(){
+  openId=null;
+  document.getElementById('overlay').classList.remove('open');
+  document.getElementById('sheet').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+/* Touch swipe to close */
+let touchY=0;
+document.getElementById('sheet').addEventListener('touchstart',e=>{touchY=e.touches[0].clientY;},{passive:true});
+document.getElementById('sheet').addEventListener('touchmove',e=>{
+  const dy=e.touches[0].clientY-touchY;
+  const body=document.getElementById('sheet-body');
+  if(dy>60&&body.scrollTop===0)closeSheet();
+},{passive:true});
+
+/* ── LOAD PAGE ── */
+async function loadPage(id){
+  try{
+    const r=await fetch('/api/page?id='+id);
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    const data=await r.json();
+    cache[id]=parse(data.lines||[]);
+  }catch(e){cache[id]={err:e.message};}
+}
+
+/* ── PARSE ── */
+function parse(lines){
+  const o={kbju:null,ing:[],steps:[],notes:[],children:null};
+  let mode='';
+  lines.forEach(l=>{
+    const t=l.text||'',tp=l.type;
+    if(!o.kbju&&t.match(/ккал|КБЖУ/i)){
+      const n=t.match(/[\d.]+/g);
+      if(n&&n.length>=4)o.kbju={kcal:n[0],p:n[1],f:n[2],c:n[3]};
+      return;
+    }
+    if(tp.startsWith('heading')||t.match(/^(ингредиент|состав)/i)){mode='ing';return;}
+    if(t.match(/^(приготовление|шаги|способ)/i)){mode='steps';return;}
+    if(tp==='table_row'){
+      const c=l.cells||[];
+      if(c.length>=2&&c[0])o.ing.push({name:c[0],amt:c[1]||''});
+      return;
+    }
+    if(tp==='bulleted_list_item'){
+      if(mode==='ing'||(!mode&&!o.steps.length)){
+        const m=t.match(/^([\d.,]+\s*(?:г|мл|шт|ст\.л|ч\.л|кг|л)[^\s—–]*)\s*[—–\-]?\s*(.+)$/i);
+        if(m)o.ing.push({name:m[2].trim(),amt:m[1].trim()});
+        else o.ing.push({name:t,amt:''});
+      }else o.steps.push(t);
+      return;
+    }
+    if(tp==='numbered_list_item'){mode='steps';o.steps.push(t);return;}
+    if(t.match(/^ДЕТЯМ:/i)||t.match(/^для детей:/i)){o.children=t;return;}
+    if(tp==='callout'||(tp==='paragraph'&&(t.startsWith('💡')||t.startsWith('⚠️')||t.startsWith('ℹ️')))){
+      if(t.match(/детям|детск/i)&&!o.children)o.children=t;
+      else o.notes.push(t);
+      return;
+    }
+  });
+  return o;
+}
+
+/* ── RENDER RECIPE ── */
+function renderRecipe(id,c){
+  if(!c)return'<div class="state"><div class="spin"></div></div>';
+  if(c.err)return'<div class="err-box">'+c.err+'</div>';
+  let h='';
+  // КБЖУ
+  if(c.kbju){
+    h+='<div class="kbju">'+
+      kbjuCell(c.kbju.kcal,'ккал')+
+      kbjuCell(c.kbju.p,'белки')+
+      kbjuCell(c.kbju.f,'жиры')+
+      kbjuCell(c.kbju.c,'углев.')+
+    '</div>';
+  }
+  // Ингредиенты
+  if(c.ing.length){
+    h+='<div class="r-sec"><div class="r-sec-title">Ингредиенты</div><div class="ing-list">';
+    c.ing.forEach(i=>{h+='<div class="ing-row"><span class="ing-amt">'+i.amt+'</span><span class="ing-name">'+i.name+'</span></div>';});
+    h+='</div></div>';
+  }
+  // Дети
+  if(c.children){
+    h+='<div class="r-sec"><div class="r-sec-title">Детская порция</div><div class="children-block">'+c.children+'</div></div>';
+  }
+  // Шаги
+  if(c.steps.length){
+    h+='<div class="r-sec"><div class="r-sec-title">Приготовление</div><div class="steps">';
+    c.steps.forEach((s,i)=>{
+      const{html:sh}=injectTimers(id,i,s);
+      h+='<div class="step"><div class="step-num">'+(i+1)+'</div><div class="step-text">'+sh+'</div></div>';
+    });
+    h+='</div></div>';
+  }
+  // Заметки
+  if(c.notes.length){
+    h+='<div class="r-sec">';
+    c.notes.forEach(n=>{h+='<div class="note-block">'+n+'</div>';});
+    h+='</div>';
+  }
+  if(!c.ing.length&&!c.steps.length&&!c.notes.length){
+    h='<div class="state" style="padding:40px 0"><div class="state-icon">📖</div><div class="state-text">Рецепт ещё не заполнен в Notion</div></div>';
+  }
+  return h;
+}
+function kbjuCell(v,l){return'<div class="kbju-cell"><div class="kbju-val">'+v+'</div><div class="kbju-lbl">'+l+'</div></div>';}
+
+/* ── TIMERS ── */
+const ADJ_RE=/~(\d+)(?:[–\-](\d+))?\s*мин/gi;
+const FIX_RE=/(?<![~\d])(\d+)(?:[–\-](\d+))?\s*мин(?!\d)/gi;
+
+function injectTimers(rid,si,text){
+  const ridC=rid.replace(/-/g,'');
+  let html=text;
+  html=html.replace(ADJ_RE,(m,m1)=>{
+    const mins=parseInt(m1);if(mins<1||mins>180)return m;
+    const cid='a_'+ridC+'_'+si+'_'+(cc++);
+    const saved=getSaved(rid,cid,mins);
+    const changed=saved!==mins;
+    initT(cid,saved,mins);
+    return chipEl(cid,rid,mins,saved,changed,true)+timerEl(cid,saved,true,changed);
+  });
+  html=html.replace(FIX_RE,(m,m1,m2,off,str)=>{
+    if(off>0&&(str[off-1]==='~'||/\d/.test(str[off-1])))return m;
+    const mins=parseInt(m1);if(mins<1||mins>180)return m;
+    const cid='f_'+ridC+'_'+si+'_'+(cc++);
+    initT(cid,mins,mins);
+    return chipEl(cid,rid,mins,mins,false,false)+timerEl(cid,mins,false,false);
+  });
+  return{html};
+}
+
+function chipEl(cid,rid,def,cur,changed,adj){
+  const cls='t-chip'+(adj?' adj':'')+(changed?' changed':'');
+  const lbl=changed?(cur+' мин✎'):(adj?def+' мин~':def+' мин');
+  return'<button class="'+cls+'" id="chip_'+cid+'" onclick="chipTap(\''+cid+'\',\''+rid+'\','+def+','+adj+')">'+lbl+'</button>';
+}
+
+function timerEl(cid,mins,adj,changed){
+  const adjCls=adj?' adj-timer':'';
+  const edit=adj?'<div class="it-edit"><input class="it-edit-inp" id="inp_'+cid+'" type="number" min="1" max="180" value="'+mins+'"><span class="it-lbl">мин</span><button class="it-save" onclick="saveAdj(\''+cid+'\')">Сохранить</button>'+(changed?'<button class="it-reset" id="rst_'+cid+'" onclick="resetAdj(\''+cid+'\')">Сброс</button>':'<button class="it-reset" id="rst_'+cid+'" style="display:none" onclick="resetAdj(\''+cid+'\')">Сброс</button>')+'</div>':'';
+  return'<div class="itimer'+adjCls+'" id="it_'+cid+'"><div class="it-top"><div class="it-display" id="itd_'+cid+'">'+fmt(mins*60)+'</div><div class="it-btns"><button class="it-btn" onclick="startIT(\''+cid+'\')">▶</button><button class="it-btn" onclick="pauseIT(\''+cid+'\')">⏸</button><button class="it-btn" onclick="resetIT(\''+cid+'\')">↺</button></div></div>'+edit+'</div>';
+}
+
+function getSaved(rid,cid,def){try{const s=JSON.parse(localStorage.getItem(LS(rid))||'{}');return s[cid]||def;}catch{return def;}}
+function initT(cid,mins,def){if(!TS[cid])TS[cid]={sec:mins*60,orig:mins*60,def:def*60};}
+
+function chipTap(cid,rid,def,adj){
+  const it=document.getElementById('it_'+cid);if(!it)return;
+  if(!it.classList.contains('visible')){it.classList.add('visible');if(!TS[cid])initT(cid,getSaved(rid,cid,def),def);startIT(cid);}
+  else startIT(cid);
+}
+
+function saveAdj(cid){
+  const inp=document.getElementById('inp_'+cid);
+  if(!inp)return;
+  const val=Math.max(1,Math.min(180,parseInt(inp.value)||1));
+  inp.value=val;
+  const rid=Object.keys(cache).find(r=>document.getElementById('it_'+cid));
+  if(openId){try{const s=JSON.parse(localStorage.getItem(LS(openId))||'{}');const def=TS[cid]?TS[cid].def/60:val;if(val===def)delete s[cid];else s[cid]=val;localStorage.setItem(LS(openId),JSON.stringify(s));}catch{}}
+  if(TS[cid]&&!TS[cid].iv){TS[cid].sec=val*60;TS[cid].orig=val*60;updateDisp(cid);}
+  const chip=document.getElementById('chip_'+cid);
+  if(chip){const def=TS[cid]?TS[cid].def/60:val;chip.textContent=val!==def?val+' мин✎':val+' мин~';chip.className='t-chip adj'+(val!==def?' changed':'');}
+  const rst=document.getElementById('rst_'+cid);
+  if(rst){const def=TS[cid]?TS[cid].def/60:val;rst.style.display=val!==def?'':'none';}
+}
+
+function resetAdj(cid){
+  const def=TS[cid]?TS[cid].def/60:null;if(!def)return;
+  const inp=document.getElementById('inp_'+cid);if(inp)inp.value=def;
+  if(TS[cid]&&!TS[cid].iv){TS[cid].sec=def*60;TS[cid].orig=def*60;updateDisp(cid);}
+  if(openId){try{const s=JSON.parse(localStorage.getItem(LS(openId))||'{}');delete s[cid];localStorage.setItem(LS(openId),JSON.stringify(s));}catch{}}
+  const chip=document.getElementById('chip_'+cid);if(chip){chip.textContent=def+' мин~';chip.className='t-chip adj';}
+  const rst=document.getElementById('rst_'+cid);if(rst)rst.style.display='none';
+}
+
+function startIT(cid){
+  const ts=TS[cid];if(!ts||ts.iv)return;
+  if(ts.sec<=0){ts.sec=ts.orig;updateDisp(cid);}
+  const chip=document.getElementById('chip_'+cid);if(chip)chip.classList.add('running');
+  const d=document.getElementById('itd_'+cid);if(d)d.className='it-display running';
+  ts.iv=setInterval(()=>{
+    ts.sec--;updateDisp(cid);
+    if(ts.sec<=0){
+      clearInterval(ts.iv);ts.iv=null;
+      if(chip)chip.classList.remove('running');
+      if(d)d.className='it-display';
+      if(Notification.permission==='granted')new Notification('Таймер',{body:'Время вышло!'});
+      else alert('⏱ Время вышло!');
+    }
+  },1000);
+  if(Notification.permission==='default')Notification.requestPermission();
+}
+function pauseIT(cid){const ts=TS[cid];if(!ts)return;clearInterval(ts.iv);ts.iv=null;const chip=document.getElementById('chip_'+cid);if(chip)chip.classList.remove('running');const d=document.getElementById('itd_'+cid);if(d)d.className='it-display';}
+function resetIT(cid){pauseIT(cid);const ts=TS[cid];if(!ts)return;ts.sec=ts.orig;updateDisp(cid);}
+function updateDisp(cid){const ts=TS[cid];if(!ts)return;const d=document.getElementById('itd_'+cid);if(d)d.textContent=fmt(ts.sec);}
+function fmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}
+
+init();
+</script>
+</body>
+</html>
