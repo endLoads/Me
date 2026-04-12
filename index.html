@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#1A1209">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Рецепты</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Nunito+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1A1209;--ink2:#3D2E1A;--muted:#8C7A65;--warm:#F5F0E8;--paper:#FAF7F2;--line:#E8E0D0;--accent:#B5451B;--gold:#C8903A;--green:#2D6A45;--bg:#F2EDE3;--card:#FDFAF5;--r:16px}
+@media(prefers-color-scheme:dark){:root{--ink:#F0E8D8;--ink2:#C8B89A;--muted:#7A6A55;--warm:#1E1810;--paper:#181410;--line:#2A2218;--bg:#141008;--card:#1C1710}}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Nunito Sans',system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+.hdr{background:var(--paper);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:200;padding:env(safe-area-inset-top,0) 0 0}
+.hdr-inner{padding:16px 18px 0}
+.hdr-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+.hdr-title{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;letter-spacing:-0.5px;line-height:1}
+.hdr-title em{font-style:italic;color:var(--accent)}
+.hdr-count{font-size:11px;color:var(--muted);background:var(--warm);padding:3px 10px;border-radius:20px;margin-top:4px;font-weight:500}
+.search-row{position:relative;margin-bottom:14px}
+.search{width:100%;padding:11px 16px 11px 40px;background:var(--warm);border:1.5px solid transparent;border-radius:12px;color:var(--ink);font-family:inherit;font-size:14px;outline:none;transition:border-color .2s;-webkit-appearance:none}
+.search:focus{border-color:var(--accent);background:var(--card)}
+.search-ico{position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:15px;opacity:.4;pointer-events:none}
+.cats{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:0 0 14px}
+.cats::-webkit-scrollbar{display:none}
+.cat{flex-shrink:0;padding:6px 14px;border-radius:22px;border:1.5px solid var(--line);background:transparent;color:var(--muted);font-family:inherit;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;transition:all .18s}
+.cat.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.wrap{padding:14px 14px 100px;max-width:500px;margin:0 auto}
+.list{display:flex;flex-direction:column;gap:8px}
+.rc{background:var(--card);border-radius:var(--r);border:1px solid var(--line);overflow:hidden}
+.rc-hdr{padding:16px 18px;cursor:pointer;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
+.rc-title{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;line-height:1.25}
+.rc-meta{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.rc-time{font-size:11px;color:var(--accent);font-weight:600;letter-spacing:.3px}
+.rc-arrow{font-size:12px;color:var(--muted);transition:transform .2s;margin-left:4px}
+.rc-arrow.open{transform:rotate(180deg)}
+.rc-tags{padding:0 18px 12px;display:flex;gap:5px;flex-wrap:wrap}
+.tag{font-size:10px;padding:2px 8px;border-radius:8px;background:var(--warm);color:var(--muted);font-weight:500}
+.tag-who{background:#EFF6F1;color:#2D6A45}
+@media(prefers-color-scheme:dark){.tag-who{background:#0D2018;color:#4CAF70}}
+.rc-body{display:none;border-top:1px solid var(--line)}
+.rc-body.open{display:block}
+.kbju{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--line)}
+.kbju-c{padding:10px 6px;text-align:center;border-right:1px solid var(--line)}
+.kbju-c:last-child{border-right:none}
+.kbju-v{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--accent);line-height:1}
+.kbju-l{font-size:9px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-top:3px}
+.sec{padding:14px 18px;border-bottom:1px solid var(--line)}
+.sec:last-child{border-bottom:none}
+.sec-hdr{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin-bottom:10px}
+.ing{display:flex;align-items:baseline;gap:10px;padding:6px 0;border-bottom:1px solid var(--line);font-size:13px;line-height:1.4}
+.ing:last-child{border-bottom:none}
+.ing-amt{min-width:90px;flex-shrink:0;color:var(--muted);font-size:12px;font-weight:500}
+.step{display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px;line-height:1.65}
+.step:last-child{border-bottom:none}
+.step-n{flex-shrink:0;width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;margin-top:3px}
+.param{display:flex;gap:10px;padding:5px 0;border-bottom:1px solid var(--line);font-size:12px;line-height:1.5}
+.param:last-child{border-bottom:none}
+.param-k{min-width:120px;flex-shrink:0;color:var(--muted);font-weight:500}
+.note{background:var(--warm);border-left:3px solid var(--gold);padding:10px 14px;border-radius:0 8px 8px 0;font-size:12px;line-height:1.7;color:var(--ink2);margin-bottom:8px}
+.note:last-child{margin-bottom:0}
+.tc{display:inline-flex;align-items:center;padding:1px 9px;border-radius:9px;background:#FFF0E8;color:#B5451B;font-size:12px;font-weight:600;border:none;cursor:pointer;font-family:inherit;vertical-align:middle;margin:0 1px;white-space:nowrap}
+.tc.run{background:#E8F5EE;color:var(--green)}
+.tc.adj{background:#EDF2FF;color:#3B5BDB}
+.tc.adj.changed{background:#F3EEFF;color:#7048E8;font-style:italic}
+.tc.adj.run{background:#E8F5EE;color:var(--green)}
+@media(prefers-color-scheme:dark){.tc{background:#2A1810;color:#E07040}.tc.adj{background:#161D30;color:#7B9CF7}.tc.adj.changed{background:#1E1530;color:#B89EFF}.tc.run,.tc.adj.run{background:#0D2018;color:#4CAF70}}
+.it{display:none;margin:5px 0 8px 34px;padding:10px 14px;border-radius:10px;background:var(--warm);border-left:3px solid var(--accent)}
+.it.adj-t{border-left-color:#3B5BDB}
+.it.vis{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.it.done{border-left-color:var(--green)}
+.it-d{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:400;font-variant-numeric:tabular-nums;letter-spacing:2px;min-width:72px}
+.it-d.run{color:var(--green)}
+.it-btns{display:flex;gap:5px}
+.it-b{padding:5px 11px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-family:inherit;font-size:12px;cursor:pointer}
+.it-b:active{opacity:.6}
+.it-edit{display:flex;align-items:center;gap:6px;width:100%;margin-top:7px}
+.it-inp{width:52px;padding:4px 6px;border:1px solid var(--line);border-radius:7px;background:var(--card);color:var(--ink);font-family:inherit;font-size:12px;text-align:center}
+.it-save{padding:4px 10px;border-radius:7px;border:none;background:var(--accent);color:#fff;font-family:inherit;font-size:11px;cursor:pointer;font-weight:600}
+.it-rst{padding:4px 8px;border-radius:7px;border:1px solid var(--line);background:transparent;color:var(--muted);font-family:inherit;font-size:11px;cursor:pointer}
+.loading{text-align:center;padding:60px 20px;color:var(--muted)}
+.spin{width:24px;height:24px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:spin .6s linear infinite;margin:0 auto 14px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.sm-load{padding:16px 18px;text-align:center;color:var(--muted);font-size:13px}
+.sm-load .spin{width:16px;height:16px;margin-bottom:6px}
+.err{background:#FFF0EC;border:1px solid #FFCFC0;border-radius:12px;padding:14px;font-size:13px;color:#C00;line-height:1.5}
+.retry-btn{display:block;margin:10px auto 0;padding:9px 22px;border-radius:10px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);font-family:inherit;font-size:13px;cursor:pointer}
+.empty{text-align:center;padding:40px 20px;color:var(--muted);font-size:14px}
+</style>
+</head>
+<body>
+<div class="hdr"><div class="hdr-inner">
+  <div class="hdr-top">
+    <div class="hdr-title">Семейные<br><em>рецепты</em></div>
+    <span class="hdr-count" id="cnt">—</span>
+  </div>
+  <div class="search-row">
+    <span class="search-ico">🔍</span>
+    <input class="search" type="search" id="q" placeholder="Найти блюдо…" oninput="doFilter()">
+  </div>
+  <div class="cats" id="cats"></div>
+</div></div>
+<div class="wrap"><div id="main"><div class="loading"><div class="spin"></div>Загружаем рецепты…</div></div></div>
+<script>
+const CATS=[{k:'Все',i:''},{k:'Детские',i:'🧒'},{k:'Супы',i:'🍲'},{k:'Основные',i:'🍽'},{k:'Соусы',i:'🥄'},{k:'Аэрогриль',i:'🔥'},{k:'Завтраки',i:'🌅'},{k:'Перекусы',i:'🍎'},{k:'Ужины',i:'🌙'}];
+const CAT_MAP={'Детские':'🧒 Детские','Супы':'🍲 Супы','Основные':'🍽 Основные','Соусы':'🥄 Соусы','Аэрогриль':'🔥 Аэрогриль взрослые','Завтраки':'🌅 Завтраки','Перекусы':'🍎 Перекусы','Ужины':'🌙 Ужины взрослые'};
+const CAT_ICON={'🧒 Детские':'🧒','🍲 Супы':'🍲','🍽 Основные':'🍽','🥄 Соусы':'🥄','🔥 Аэрогриль взрослые':'🔥','🌅 Завтраки':'🌅','🍎 Перекусы':'🍎','🌙 Ужины взрослые':'🌙'};
+const LS=id=>'rt_'+id;
+let all=[],cat='Все',q='',open={},cache={};
+
+async function init(){buildCats();await fetchAll();}
+
+function buildCats(){
+  const el=document.getElementById('cats');el.innerHTML='';
+  CATS.forEach(c=>{const b=document.createElement('button');b.className='cat'+(c.k===cat?' on':'');b.innerHTML=(c.i?'<span style="margin-right:4px">'+c.i+'</span>':'')+c.k;b.onclick=()=>{cat=c.k;buildCats();renderList();};el.appendChild(b);});
+}
+
+async function fetchAll(){
+  document.getElementById('main').innerHTML='<div class="loading"><div class="spin"></div>Загружаем рецепты…</div>';
+  try{const r=await fetch('/api/recipes');if(!r.ok)throw new Error('Ошибка '+r.status);all=await r.json();renderList();}
+  catch(e){document.getElementById('main').innerHTML='<div class="err">'+e.message+'</div><button class="retry-btn" onclick="fetchAll()">Повторить</button>';}
+}
+
+function doFilter(){q=document.getElementById('q').value.toLowerCase().trim();renderList();}
+function clean(t){return t.replace(/^\d+\.\d+\s+/,'').replace(/^\d+\s+/,'').trim();}
+function getVis(){return all.filter(r=>{const co=cat==='Все'||r.cat===(CAT_MAP[cat]||cat);const qo=!q||clean(r.title).toLowerCase().includes(q);return co&&qo;}).sort((a,b)=>clean(a.title).localeCompare(clean(b.title),'ru',{sensitivity:'base'}));}
+
+function renderList(){
+  const list=getVis();
+  document.getElementById('cnt').textContent=list.length+' рецептов';
+  if(!list.length){document.getElementById('main').innerHTML='<div class="empty">🍽 Ничего не нашлось</div>';return;}
+  const el=document.createElement('div');el.className='list';
+  list.forEach(r=>el.appendChild(buildCard(r)));
+  document.getElementById('main').innerHTML='';document.getElementById('main').appendChild(el);
+}
+
+function buildCard(r){
+  const div=document.createElement('div');div.className='rc';div.id='rc_'+r.id;
+  const isOpen=!!open[r.id];const title=clean(r.title);const icon=CAT_ICON[r.cat]||'🍽';
+  const tagWho=(r.who||[]).map(w=>'<span class="tag tag-who">'+w+'</span>').join('');
+  div.innerHTML='<div class="rc-hdr" onclick="toggle(\''+r.id+'\')"><div class="rc-title">'+icon+' '+title+'</div><div class="rc-meta">'+(r.time?'<span class="rc-time">'+r.time+'</span>':'')+'<span class="rc-arrow'+(isOpen?' open':'')+'">▾</span></div></div>'+(tagWho?'<div class="rc-tags">'+tagWho+'</div>':'')+'<div class="rc-body'+(isOpen?' open':'')+'" id="bd_'+r.id+'">'+(isOpen?(cache[r.id]?renderBody(r.id,cache[r.id]):smLoad()):'')+'</div>';
+  return div;
+}
+function smLoad(){return '<div class="sm-load"><div class="spin"></div>Загружаем…</div>';}
+
+async function toggle(id){
+  open[id]=!open[id];
+  const bd=document.getElementById('bd_'+id);const arr=document.querySelector('#rc_'+id+' .rc-arrow');if(!bd)return;
+  if(open[id]){
+    bd.classList.add('open');if(arr)arr.classList.add('open');
+    if(!cache[id]){bd.innerHTML=smLoad();await fetchPage(id);bd.innerHTML=renderBody(id,cache[id]);}
+  }else{bd.classList.remove('open');if(arr)arr.classList.remove('open');}
+}
+
+async function fetchPage(id){
+  try{const r=await fetch('/api/page?id='+id);if(!r.ok)throw new Error('HTTP '+r.status);const d=await r.json();cache[id]=parseBlocks(d.lines||[]);}
+  catch(e){cache[id]={err:e.message};}
+}
+
+// ─── PARSER ───────────────────────────────────────────────────────────────
+function parseBlocks(lines){
+  const out={kbju:null,ing:[],steps:[],params:[],notes:[]};
+  let mode='';
+  lines.forEach(l=>{
+    const t=(l.text||'').trim(),type=l.type;
+    if(!out.kbju&&t.match(/ккал|КБЖУ/i)){const n=t.match(/[\d.]+/g);if(n&&n.length>=4)out.kbju={kcal:n[0],p:n[1],f:n[2],c:n[3]};return;}
+    if(type==='heading_1'||type==='heading_2'||type==='heading_3'){
+      if(t.match(/ингредиент|состав/i)){mode='ing';return;}
+      if(t.match(/приготовлени|шаги|способ/i)){mode='steps';return;}
+      if(t.match(/параметр/i)){mode='params';return;}
+      return;
+    }
+    if(type==='table_row'){
+      const c=l.cells||[];
+      if(c.length>=2&&c[0]){if(mode==='params')out.params.push({k:c[0],v:c[1]||''});else out.ing.push({name:c[0],amt:c[1]||''});}
+      return;
+    }
+    if(type==='numbered_list_item'){mode='steps';if(t)out.steps.push(t);return;}
+    if(type==='bulleted_list_item'){
+      if(mode==='notes'){
+        // Добавляем буллет к последней заметке или создаём новую
+        if(out.notes.length) out.notes[out.notes.length-1]+=(out.notes[out.notes.length-1].endsWith('\n')?'':'\n')+'• '+t;
+        else out.notes.push('• '+t);
+      } else if(mode==='ing'||(!mode&&!out.steps.length)){
+        const m=t.match(/^([\d.,]+\s*(?:г|мл|шт|ст\.л|ч\.л|кг|л)[^\s—–]*)\s*[—–\-]?\s*(.+)$/i);
+        if(m)out.ing.push({name:m[2].trim(),amt:m[1].trim()});else out.ing.push({name:t,amt:''});
+      } else {
+        out.steps.push(t);
+      }
+      return;
+    }
+    if(type==='callout'||(type==='paragraph'&&(t.startsWith('💡')||t.startsWith('⚠️')||t.startsWith('ℹ️')))){
+      if(t){mode='notes';out.notes.push(t);}return;
+    }
+  });
+  return out;
+}
+
+// ─── RENDERER ─────────────────────────────────────────────────────────────
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+function renderBody(id,c){
+  if(!c)return smLoad();
+  if(c.err)return'<div class="sec"><div class="err">'+c.err+'</div></div>';
+  let h='';
+  if(c.kbju)h+='<div class="kbju"><div class="kbju-c"><div class="kbju-v">'+c.kbju.kcal+'</div><div class="kbju-l">ккал</div></div><div class="kbju-c"><div class="kbju-v">'+c.kbju.p+'</div><div class="kbju-l">белки</div></div><div class="kbju-c"><div class="kbju-v">'+c.kbju.f+'</div><div class="kbju-l">жиры</div></div><div class="kbju-c"><div class="kbju-v">'+c.kbju.c+'</div><div class="kbju-l">углев.</div></div></div>';
+  if(c.ing.length){h+='<div class="sec"><div class="sec-hdr">Ингредиенты</div>';c.ing.forEach(i=>{h+='<div class="ing"><span class="ing-amt">'+esc(i.amt)+'</span><span>'+esc(i.name)+'</span></div>';});h+='</div>';}
+  if(c.steps.length){
+    h+='<div class="sec"><div class="sec-hdr">Приготовление</div>';
+    CC=0;
+    c.steps.forEach((s,si)=>{const{html}=injectT(id,si,s);h+='<div class="step"><div class="step-n">'+(si+1)+'</div><div>'+html+'</div></div>';});
+    h+='</div>';
+  }
+  if(c.params.length){h+='<div class="sec"><div class="sec-hdr">Параметры</div>';c.params.forEach(p=>{h+='<div class="param"><span class="param-k">'+esc(p.k)+'</span><span>'+esc(p.v)+'</span></div>';});h+='</div>';}
+  if(c.notes.length){
+    h+='<div class="sec">';
+    c.notes.forEach(n=>{
+      // Если заметка содержит буллеты — рендерим построчно
+      if(n.includes('\n')){
+        const lines=n.split('\n');
+        h+='<div class="note">';
+        lines.forEach((line,i)=>{
+          if(i===0) h+=esc(line);
+          else if(line.startsWith('• ')) h+='<div style="margin-top:4px;padding-left:10px">'+esc(line)+'</div>';
+          else h+='<div style="margin-top:4px">'+esc(line)+'</div>';
+        });
+        h+='</div>';
+      } else {
+        h+='<div class="note">'+esc(n)+'</div>';
+      }
+    });
+    h+='</div>';
+  }
+  if(!c.ing.length&&!c.steps.length&&!c.notes.length)h+='<div class="sec"><div class="empty" style="padding:8px 0;font-size:12px">Нет содержимого</div></div>';
+  return h;
+}
+
+// ─── TIMERS ───────────────────────────────────────────────────────────────
+let CC=0;const TS={};
+
+// Применяем обе regex к ОРИГИНАЛЬНОМУ тексту (не к HTML) — нет двойного матчинга
+function injectT(rid,si,rawText){
+  const text=rawText;
+  const matches=[];
+  // Регулируемые ~X мин
+  const adjRe=/~(\d+)(?:[–\u2013\-](\d+))?\s*мин/g;
+  let m;
+  while((m=adjRe.exec(text))!==null){const mn=parseInt(m[1]);if(mn>=1&&mn<=180)matches.push({idx:m.index,end:m.index+m[0].length,raw:m[0],min:mn,adj:true});}
+  // Фиксированные X мин
+  const fixRe=/(\d+)(?:[–\u2013\-](\d+))?\s*мин/g;
+  while((m=fixRe.exec(text))!==null){
+    if(m.index>0&&text[m.index-1]==='~')continue;
+    if(matches.some(e=>m.index>=e.idx&&m.index<e.end))continue;
+    const mn=parseInt(m[1]);if(mn>=1&&mn<=180)matches.push({idx:m.index,end:m.index+m[0].length,raw:m[0],min:mn,adj:false});
+  }
+  if(!matches.length)return{html:esc(text)};
+  matches.sort((a,b)=>a.idx-b.idx);
+  let html='',last=0;
+  for(const match of matches){
+    html+=esc(text.slice(last,match.idx));
+    const cid=(match.adj?'a':'f')+rid.replace(/-/g,'')+si+(CC++);
+    const saved=match.adj?getSaved(rid,cid,match.min):match.min;
+    initTS(cid,saved,match.min);
+    html+=chip(cid,rid,match.min,saved,match.adj,match.raw)+itimer(cid,saved,match.min,match.adj);
+    last=match.end;
+  }
+  html+=esc(text.slice(last));
+  return{html};
+}
+
+function chip(cid,rid,def,saved,adj,raw){
+  const changed=adj&&saved!==def;
+  const cls='tc'+(adj?' adj':'')+(changed?' changed':'');
+  const lbl=changed?saved+' мин ✎':raw.replace('~','').trim();
+  return'<button class="'+cls+'" id="tc_'+cid+'" onclick="chipClick(\''+cid+'\',\''+rid+'\','+def+','+adj+')">'+lbl+'</button>';
+}
+
+function itimer(cid,mins,def,adj){
+  const adjCls=adj?' adj-t':'';
+  const changed=adj&&mins!==def;
+  let edit='';
+  if(adj)edit='<div class="it-edit"><input class="it-inp" id="inp_'+cid+'" type="number" min="1" max="180" value="'+mins+'" onchange="saveAdj(\''+cid+'\',this.value)"><span style="font-size:11px;color:var(--muted)">мин</span><button class="it-save" onclick="saveAdj(\''+cid+'\',document.getElementById(\'inp_'+cid+'\').value)">Сохранить</button><button class="it-rst" id="rst_'+cid+'" style="'+(changed?'':'display:none')+'" onclick="resetAdj(\''+cid+'\')">Сброс</button></div>';
+  return'<div class="it'+adjCls+'" id="it_'+cid+'"><div class="it-d" id="itd_'+cid+'">'+fmt(mins*60)+'</div><div class="it-btns"><button class="it-b" onclick="startIT(\''+cid+'\')">▶</button><button class="it-b" onclick="pauseIT(\''+cid+'\')">⏸</button><button class="it-b" onclick="resetIT(\''+cid+'\')">↺</button></div>'+edit+'</div>';
+}
+
+function initTS(cid,mins,def){if(!TS[cid])TS[cid]={sec:mins*60,orig:mins*60,def:def*60,iv:null};}
+function getSaved(rid,cid,def){try{return JSON.parse(localStorage.getItem(LS(rid))||'{}')[cid]||def;}catch{return def;}}
+
+function saveAdj(cid,val){
+  val=Math.max(1,Math.min(180,parseInt(val)||1));
+  const rid=Object.keys(open).find(r=>open[r]&&cid.includes('a'+r.replace(/-/g,'')));
+  if(rid){try{const s=JSON.parse(localStorage.getItem(LS(rid))||'{}');const def=TS[cid]?TS[cid].def/60:val;if(val===def)delete s[cid];else s[cid]=val;localStorage.setItem(LS(rid),JSON.stringify(s));}catch{}}
+  if(TS[cid]&&!TS[cid].iv){TS[cid].sec=val*60;TS[cid].orig=val*60;}
+  updD(cid);
+  const ch=document.getElementById('tc_'+cid);
+  if(ch){const def=TS[cid]?TS[cid].def/60:val;ch.textContent=val!==def?val+' мин ✎':val+' мин';ch.className='tc adj'+(val!==def?' changed':'')+(ch.classList.contains('run')?' run':'');}
+  const rst=document.getElementById('rst_'+cid);if(rst){const def=TS[cid]?TS[cid].def/60:val;rst.style.display=val!==def?'':'none';}
+  const inp=document.getElementById('inp_'+cid);if(inp)inp.value=val;
+}
+
+function resetAdj(cid){const def=TS[cid]?TS[cid].def/60:null;if(!def)return;saveAdj(cid,def);}
+
+function chipClick(cid,rid,def,adj){
+  const it=document.getElementById('it_'+cid);if(!it)return;
+  it.classList.add('vis');
+  if(!TS[cid])initTS(cid,getSaved(rid,cid,def),def);
+  if(!TS[cid].iv)startIT(cid);
+}
+
+function startIT(cid){
+  const ts=TS[cid];if(!ts||ts.iv)return;
+  if(ts.sec<=0)resetIT(cid);
+  const ch=document.getElementById('tc_'+cid);if(ch)ch.classList.add('run');
+  const d=document.getElementById('itd_'+cid);if(d)d.className='it-d run';
+  ts.iv=setInterval(()=>{
+    ts.sec--;updD(cid);
+    if(ts.sec<=0){
+      clearInterval(ts.iv);ts.iv=null;
+      if(ch)ch.classList.remove('run');
+      const it=document.getElementById('it_'+cid);if(it)it.classList.add('done');
+      if(d)d.className='it-d';
+      if(Notification.permission==='granted')new Notification('Готово!',{body:'Таймер завершён'});
+      else alert('⏱ Время вышло!');
+    }
+  },1000);
+  if(Notification.permission==='default')Notification.requestPermission();
+}
+
+function pauseIT(cid){const ts=TS[cid];if(!ts)return;clearInterval(ts.iv);ts.iv=null;const ch=document.getElementById('tc_'+cid);if(ch)ch.classList.remove('run');const d=document.getElementById('itd_'+cid);if(d)d.className='it-d';}
+function resetIT(cid){pauseIT(cid);const ts=TS[cid];if(!ts)return;ts.sec=ts.orig;updD(cid);const it=document.getElementById('it_'+cid);if(it)it.classList.remove('done');}
+function updD(cid){const ts=TS[cid];if(!ts)return;const d=document.getElementById('itd_'+cid);if(d)d.textContent=fmt(ts.sec);}
+function fmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}
+
+init();
+</script>
+</body>
+</html>
