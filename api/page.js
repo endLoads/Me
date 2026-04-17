@@ -1,113 +1,151 @@
-async function fetchChildren(id, token) {
-  const rows = [];
-  let cursor;
-  do {
-    const url = `https://api.notion.com/v1/blocks/${id}/children?page_size=100${cursor ? `&start_cursor=${cursor}` : ""}`;
-    const r = await fetch(url, {
-      headers: { Authorization: `Bearer ${token}`, "Notion-Version": "2022-06-28" },
-    });
-    const data = await r.json();
-    if (!r.ok) break;
-    rows.push(...(data.results || []));
-    cursor = data.has_more ? data.next_cursor : null;
-  } while (cursor);
-  return rows;
-}
+// api/page.js — Vercel Serverless Function
+// Читает страницу рецепта из Notion, возвращает структурированные данные.
+//
+// Ответ:
+//   { format: "v1", data: {...valid recipe...}, warnings: [...],  last_edited, created_at, id }
+//   { format: "v0", blocks: [...], last_edited, created_at, id }   ← legacy fallback
+//   { error: "...", details: [...] }                                ← невалидный JSON
 
-function rt(arr) {
-  return (arr || []).map((t) => t.plain_text).join("").trim();
-}
+import { validate } from '../lib/validator.mjs';
+
+const NOTION_TOKEN = process.env.NOTION_TOKEN;
+const NOTION_VERSION = '2022-06-28';
 
 export default async function handler(req, res) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
-  if (req.method === "OPTIONS") return res.status(200).end();
-
-  const token = process.env.NOTION_TOKEN;
-  if (!token) return res.status(500).json({ error: "NOTION_TOKEN not set" });
-
   const { id } = req.query;
-  if (!id) return res.status(400).json({ error: "id required" });
+  if (!id) return res.status(400).json({ error: 'Missing id parameter' });
 
   try {
-    const blocks = await fetchChildren(id, token);
-    const lines = [];
+    const pageId = normalizeId(id);
 
-    for (const b of blocks) {
-      const type = b.type;
+    // Параллельно: свойства страницы + блоки
+    const [pageMeta, blocks] = await Promise.all([
+      fetchPageMeta(pageId),
+      fetchAllBlocks(pageId)
+    ]);
 
-      // ── Таблица — читаем дочерние строки ──────────────────────────────
-      if (type === "table") {
-        const hasHdr = b.table?.has_column_header ?? true;
-        const children = await fetchChildren(b.id, token);
-        children.forEach((row, i) => {
-          if (hasHdr && i === 0) return; // пропускаем заголовок
-          const cells = (row.table_row?.cells || []).map((c) =>
-            c.map((t) => t.plain_text).join("").trim()
-          );
-          // Merge 3rd+ columns into 2nd with " — " separator
-          if (cells.length > 2) {
-            const merged = cells.slice(1).filter(Boolean).join(" — ");
-            lines.push({ type: "table_row", cells: [cells[0], merged] });
-          } else if (cells.some(Boolean)) {
-            lines.push({ type: "table_row", cells });
-          }
+    const metadata = {
+      id: pageId,
+      last_edited: pageMeta.last_edited_time,
+      created_at: pageMeta.created_time
+    };
+
+    // Ищем первый code-блок с language=json, начинающийся с { "schema": ...
+    const jsonBlock = blocks.find(b =>
+      b.type === 'code' &&
+      b.code?.language === 'json' &&
+      extractText(b.code.rich_text).trim().startsWith('{')
+    );
+
+    if (jsonBlock) {
+      const raw = extractText(jsonBlock.code.rich_text);
+      let parsed;
+      try {
+        parsed = JSON.parse(raw);
+      } catch (e) {
+        return res.status(200).json({
+          error: 'invalid_json',
+          message: 'JSON не парсится: ' + e.message,
+          raw_snippet: raw.slice(0, 200),
+          ...metadata
         });
-        continue;
       }
 
-      // ── Callout ────────────────────────────────────────────────────────
-      if (type === "callout") {
-        const text = rt(b.callout?.rich_text);
-        const icon = b.callout?.icon?.emoji || "";
-        if (text) lines.push({ type: "callout", text: (icon ? icon + " " : "") + text });
-        continue;
+      // Проверка мажорной версии
+      const schemaVersion = String(parsed.schema || '');
+      const major = schemaVersion.split('.')[0];
+      if (major !== '1') {
+        return res.status(200).json({
+          error: 'unsupported_schema',
+          message: `Схема ${schemaVersion} не поддерживается (ожидается 1.x)`,
+          ...metadata
+        });
       }
 
-      // ── Quote ──────────────────────────────────────────────────────────
-      if (type === "quote") {
-        const text = rt(b.quote?.rich_text);
-        if (text) lines.push({ type: "callout", text });
-        continue;
+      const result = validate(parsed);
+      if (!result.valid) {
+        return res.status(200).json({
+          error: 'validation_failed',
+          message: 'Рецепт не соответствует схеме',
+          details: result.errors,
+          ...metadata
+        });
       }
 
-      // ── Заголовки ──────────────────────────────────────────────────────
-      if (type === "heading_1" || type === "heading_2" || type === "heading_3") {
-        const text = rt(b[type]?.rich_text);
-        if (text) lines.push({ type, text });
-        continue;
-      }
-
-      // ── Нумерованный список ────────────────────────────────────────────
-      if (type === "numbered_list_item") {
-        const text = rt(b.numbered_list_item?.rich_text);
-        if (text) lines.push({ type: "numbered_list_item", text });
-        continue;
-      }
-
-      // ── Маркированный список ───────────────────────────────────────────
-      if (type === "bulleted_list_item") {
-        const text = rt(b.bulleted_list_item?.rich_text);
-        if (text) lines.push({ type: "bulleted_list_item", text });
-        continue;
-      }
-
-      // ── Параграф ───────────────────────────────────────────────────────
-      if (type === "paragraph") {
-        const text = rt(b.paragraph?.rich_text);
-        if (text) lines.push({ type: "paragraph", text });
-        continue;
-      }
-
-      // ── Разделитель ────────────────────────────────────────────────────
-      if (type === "divider") {
-        lines.push({ type: "divider", text: "" });
-        continue;
-      }
+      return res.status(200).json({
+        format: 'v1',
+        data: result.data,
+        warnings: result.warnings,
+        ...metadata
+      });
     }
 
-    res.status(200).json({ lines });
-  } catch (e) {
-    res.status(500).json({ error: e.message });
+    // FALLBACK: старый формат — возвращаем блоки как раньше
+    // Парсер v0 живёт в index.html для обратной совместимости миграции
+    const v0Blocks = await hydrateLegacyBlocks(blocks);
+    return res.status(200).json({
+      format: 'v0',
+      blocks: v0Blocks,
+      ...metadata
+    });
+  } catch (err) {
+    console.error('[api/page]', err);
+    return res.status(500).json({ error: err.message });
   }
+}
+
+// ─── Notion API helpers ──────────────────────────────────────────────
+
+async function notionFetch(path) {
+  const r = await fetch(`https://api.notion.com/v1${path}`, {
+    headers: {
+      'Authorization': `Bearer ${NOTION_TOKEN}`,
+      'Notion-Version': NOTION_VERSION
+    }
+  });
+  if (!r.ok) throw new Error(`Notion API ${r.status}: ${await r.text()}`);
+  return r.json();
+}
+
+async function fetchPageMeta(pageId) {
+  return notionFetch(`/pages/${pageId}`);
+}
+
+async function fetchAllBlocks(parentId) {
+  const all = [];
+  let cursor = null;
+  do {
+    const q = cursor ? `?start_cursor=${cursor}&page_size=100` : '?page_size=100';
+    const res = await notionFetch(`/blocks/${parentId}/children${q}`);
+    all.push(...res.results);
+    cursor = res.has_more ? res.next_cursor : null;
+  } while (cursor);
+  return all;
+}
+
+// Для legacy формата — таблицам нужны дочерние запросы (table_row)
+async function hydrateLegacyBlocks(blocks) {
+  const out = [];
+  for (const b of blocks) {
+    if (b.type === 'table') {
+      const rows = await fetchAllBlocks(b.id);
+      out.push({ ...b, _children: rows });
+    } else {
+      out.push(b);
+    }
+  }
+  return out;
+}
+
+// ─── helpers ─────────────────────────────────────────────────────────
+
+function normalizeId(id) {
+  // Принимаем как UUID с дефисами, так и сплющенный
+  const hex = id.replace(/-/g, '');
+  if (!/^[0-9a-f]{32}$/i.test(hex)) throw new Error('Invalid Notion page ID');
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+}
+
+function extractText(richText) {
+  return (richText || []).map(r => r.plain_text || '').join('');
 }
