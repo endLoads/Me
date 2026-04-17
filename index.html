@@ -1,4 +1,5 @@
 <!doctype html>
+
 <html lang="ru">
 <head>
   <meta charset="utf-8">
@@ -53,1121 +54,586 @@
       }
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-    html, body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 16px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
-    body { padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
+```
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 16px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+body { padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
 
-    .app { max-width: 540px; margin: 0 auto; padding: 16px 16px 80px; min-height: 100vh; }
-    h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; letter-spacing: -0.01em; color: var(--ink); }
-    h1 { font-size: 30px; line-height: 1.15; }
-    h2 { font-size: 24px; line-height: 1.2; }
-    h3 { font-size: 20px; line-height: 1.25; }
-    h4 { font-size: 17px; line-height: 1.3; font-weight: 700; font-family: var(--sans); letter-spacing: 0.01em; text-transform: uppercase; color: var(--ink-soft); font-size: 12px; }
+.app { max-width: 540px; margin: 0 auto; padding: 16px 16px 80px; min-height: 100vh; }
+h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; letter-spacing: -0.01em; color: var(--ink); }
+h1 { font-size: 30px; line-height: 1.15; }
+h2 { font-size: 24px; line-height: 1.2; }
+h3 { font-size: 20px; line-height: 1.25; }
+h4 { font-size: 17px; line-height: 1.3; font-weight: 700; font-family: var(--sans); letter-spacing: 0.01em; text-transform: uppercase; color: var(--ink-soft); font-size: 12px; }
 
-    a { color: var(--accent); text-decoration: none; }
-    a:active { opacity: 0.7; }
-    button { font-family: inherit; font-size: inherit; color: inherit; background: none; border: none; cursor: pointer; }
+a { color: var(--accent); text-decoration: none; }
+a:active { opacity: 0.7; }
+button { font-family: inherit; font-size: inherit; color: inherit; background: none; border: none; cursor: pointer; }
 
-    /* ─── HEADER ─── */
-    .header { padding: 8px 0 16px; display: flex; align-items: center; gap: 12px; }
-    .header .title { flex: 1; font-family: var(--serif); font-size: 28px; font-weight: 700; }
-    .header .icon-btn { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 10px; background: var(--card); border: 1px solid var(--line); font-size: 18px; }
-    .header .icon-btn:active { background: var(--warm); }
+.header { padding: 8px 0 16px; display: flex; align-items: center; gap: 12px; }
+.header .title { flex: 1; font-family: var(--serif); font-size: 28px; font-weight: 700; }
 
-    /* ─── FILTERS ─── */
-    .filter-bar { display: flex; gap: 8px; overflow-x: auto; padding: 4px 0 12px; margin: 0 -16px 4px; padding-left: 16px; padding-right: 16px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
-    .filter-bar::-webkit-scrollbar { display: none; }
-    .chip { flex-shrink: 0; padding: 7px 14px; border-radius: 100px; background: var(--card); border: 1px solid var(--line); font-size: 14px; font-weight: 600; color: var(--ink); white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; transition: transform .08s, background .15s; }
-    .chip:active { transform: scale(0.96); }
-    .chip.active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
-    .chip .count { font-size: 11px; opacity: 0.7; font-weight: 500; }
+.filter-bar { display: flex; gap: 8px; overflow-x: auto; padding: 4px 0 12px; margin: 0 -16px 4px; padding-left: 16px; padding-right: 16px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.filter-bar::-webkit-scrollbar { display: none; }
+.chip { flex-shrink: 0; padding: 7px 14px; border-radius: 100px; background: var(--card); border: 1px solid var(--line); font-size: 14px; font-weight: 600; color: var(--ink); white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; transition: transform .08s, background .15s; }
+.chip:active { transform: scale(0.96); }
+.chip.active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.chip .count { font-size: 11px; opacity: 0.7; font-weight: 500; }
 
-    /* ─── LIST ─── */
-    .list { display: flex; flex-direction: column; gap: 8px; }
-    .list-item { display: flex; gap: 14px; padding: 14px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); align-items: center; transition: transform .08s; }
-    .list-item:active { transform: scale(0.98); background: var(--warm); }
-    .list-item .emoji { font-size: 36px; line-height: 1; flex-shrink: 0; width: 52px; height: 52px; display: flex; align-items: center; justify-content: center; background: var(--warm); border-radius: 12px; }
-    .list-item .main { flex: 1; min-width: 0; }
-    .list-item .name { font-family: var(--serif); font-size: 19px; font-weight: 600; line-height: 1.25; margin-bottom: 4px; }
-    .list-item .meta { font-size: 13px; color: var(--ink-soft); display: flex; gap: 10px; flex-wrap: wrap; }
-    .list-item .meta .dot { opacity: 0.4; }
-    .list-item.untested .name::after { content: " ·"; color: var(--gold); }
+.list { display: flex; flex-direction: column; gap: 8px; }
+.list-item { display: flex; gap: 14px; padding: 14px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); align-items: center; transition: transform .08s; }
+.list-item:active { transform: scale(0.98); background: var(--warm); }
+.list-item .emoji { font-size: 36px; line-height: 1; flex-shrink: 0; width: 52px; height: 52px; display: flex; align-items: center; justify-content: center; background: var(--warm); border-radius: 12px; }
+.list-item .main { flex: 1; min-width: 0; }
+.list-item .name { font-family: var(--serif); font-size: 19px; font-weight: 600; line-height: 1.25; margin-bottom: 4px; }
+.list-item .meta { font-size: 13px; color: var(--ink-soft); display: flex; gap: 10px; flex-wrap: wrap; }
+.list-item .meta .dot { opacity: 0.4; }
+.list-item.untested .name::after { content: " ·"; color: var(--gold); }
 
-    .empty { padding: 60px 20px; text-align: center; color: var(--ink-soft); }
-    .empty-icon { font-size: 48px; margin-bottom: 12px; opacity: 0.5; }
+.empty { padding: 60px 20px; text-align: center; color: var(--ink-soft); }
+.empty-icon { font-size: 48px; margin-bottom: 12px; opacity: 0.5; }
 
-    /* ─── RECIPE DETAIL ─── */
-    .back-bar { position: sticky; top: 0; background: var(--bg); padding: 8px 0 12px; margin: -16px -16px 0; padding-left: 16px; padding-right: 16px; z-index: 10; display: flex; gap: 8px; border-bottom: 1px solid transparent; transition: border-color .2s, background .2s; }
-    .back-bar.scrolled { border-bottom-color: var(--line); background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: saturate(1.8) blur(10px); -webkit-backdrop-filter: saturate(1.8) blur(10px); }
-    .back-btn { padding: 8px 12px; background: var(--card); border: 1px solid var(--line); border-radius: 10px; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
-    .back-btn:active { background: var(--warm); }
+.back-bar { position: sticky; top: 0; background: var(--bg); padding: 8px 0 12px; margin: -16px -16px 0; padding-left: 16px; padding-right: 16px; z-index: 10; display: flex; gap: 8px; border-bottom: 1px solid transparent; transition: border-color .2s, background .2s; }
+.back-bar.scrolled { border-bottom-color: var(--line); background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: saturate(1.8) blur(10px); -webkit-backdrop-filter: saturate(1.8) blur(10px); }
+.back-btn { padding: 8px 12px; background: var(--card); border: 1px solid var(--line); border-radius: 10px; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
+.back-btn:active { background: var(--warm); }
 
-    .recipe-header { padding: 20px 0 16px; text-align: center; }
-    .recipe-header .emoji { font-size: 56px; line-height: 1; margin-bottom: 12px; }
-    .recipe-header .title { font-family: var(--serif); font-size: 32px; font-weight: 700; line-height: 1.1; margin-bottom: 10px; }
-    .recipe-header .source-note { font-size: 13px; color: var(--ink-soft); font-style: italic; }
+.recipe-header { padding: 20px 0 16px; text-align: center; }
+.recipe-header .emoji { font-size: 56px; line-height: 1; margin-bottom: 12px; }
+.recipe-header .title { font-family: var(--serif); font-size: 32px; font-weight: 700; line-height: 1.1; margin-bottom: 10px; }
+.recipe-header .source-note { font-size: 13px; color: var(--ink-soft); font-style: italic; }
 
-    .classification { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-bottom: 20px; }
-    .classification .tag { font-size: 12px; padding: 4px 10px; background: var(--warm); border-radius: 100px; font-weight: 600; color: var(--ink-soft); }
-    .classification .tag.for-kids { background: #FFE6D5; color: #8B4513; }
-    .classification .tag.category { background: var(--ink); color: var(--bg); }
-    @media (prefers-color-scheme: dark) { .classification .tag.for-kids { background: #5B3A20; color: #FFD5A8; } }
+.classification { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-bottom: 20px; }
+.classification .tag { font-size: 12px; padding: 4px 10px; background: var(--warm); border-radius: 100px; font-weight: 600; color: var(--ink-soft); }
+.classification .tag.for-kids { background: #FFE6D5; color: #8B4513; }
+.classification .tag.category { background: var(--ink); color: var(--bg); }
+@media (prefers-color-scheme: dark) { .classification .tag.for-kids { background: #5B3A20; color: #FFD5A8; } }
 
-    .quick-facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; padding: 14px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); margin-bottom: 20px; }
-    .quick-facts .fact { text-align: center; padding: 0 4px; border-right: 1px solid var(--line); }
-    .quick-facts .fact:last-child { border-right: none; }
-    .quick-facts .fact .val { font-family: var(--serif); font-size: 20px; font-weight: 700; color: var(--ink); line-height: 1; }
-    .quick-facts .fact .unit { font-size: 10px; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; font-weight: 600; }
+.quick-facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; padding: 14px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); margin-bottom: 20px; }
+.quick-facts .fact { text-align: center; padding: 0 4px; border-right: 1px solid var(--line); }
+.quick-facts .fact:last-child { border-right: none; }
+.quick-facts .fact .val { font-family: var(--serif); font-size: 20px; font-weight: 700; color: var(--ink); line-height: 1; }
+.quick-facts .fact .unit { font-size: 10px; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; font-weight: 600; }
 
-    .kbju-row { display: flex; justify-content: space-around; padding: 12px 8px; background: var(--warm); border-radius: var(--radius-sm); margin-bottom: 20px; font-size: 13px; }
-    .kbju-row .kv { text-align: center; }
-    .kbju-row .kv b { font-size: 16px; font-family: var(--serif); display: block; }
-    .kbju-row .kv span { color: var(--ink-soft); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
+.kbju-row { display: flex; justify-content: space-around; padding: 12px 8px; background: var(--warm); border-radius: var(--radius-sm); margin-bottom: 20px; font-size: 13px; }
+.kbju-row .kv { text-align: center; }
+.kbju-row .kv b { font-size: 16px; font-family: var(--serif); display: block; }
+.kbju-row .kv span { color: var(--ink-soft); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
 
-    .cook-btn { width: 100%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: var(--radius); font-size: 17px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(181,69,27,.25); transition: transform .08s; }
-    .cook-btn:active { transform: scale(0.98); }
+.cook-btn { width: 100%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: var(--radius); font-size: 17px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(181,69,27,.25); transition: transform .08s; }
+.cook-btn:active { transform: scale(0.98); }
 
-    /* ─── SECTIONS ─── */
-    .section { margin-bottom: 28px; }
-    .section-title { font-family: var(--serif); font-size: 22px; font-weight: 600; margin-bottom: 4px; padding-top: 4px; }
-    .section-note { font-size: 14px; color: var(--ink-soft); margin-bottom: 12px; line-height: 1.4; }
+.section { margin-bottom: 28px; }
+.section-title { font-family: var(--serif); font-size: 22px; font-weight: 600; margin-bottom: 4px; padding-top: 4px; }
+.section-note { font-size: 14px; color: var(--ink-soft); margin-bottom: 12px; line-height: 1.4; }
 
-    .ingredients { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; margin-bottom: 16px; }
-    .ingredient { display: flex; justify-content: space-between; align-items: baseline; padding: 11px 14px; border-bottom: 1px solid var(--line); gap: 12px; }
-    .ingredient:last-child { border-bottom: none; }
-    .ingredient .name { font-weight: 500; flex: 1; }
-    .ingredient .amount { color: var(--ink-soft); font-size: 14px; text-align: right; flex-shrink: 0; }
-    .ingredient.critical .name { font-weight: 700; }
-    .ingredient.critical .name::before { content: "● "; color: var(--accent); font-size: 10px; margin-right: 2px; vertical-align: 1px; }
+/* INGREDIENTS — grid для выравнивания колонок */
+.ingredients { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; margin-bottom: 16px; }
+.ingredient {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 12px;
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--line);
+  align-items: baseline;
+}
+.ingredient:last-child { border-bottom: none; }
+.ingredient .name { font-weight: 500; min-width: 0; overflow-wrap: anywhere; word-break: break-word; }
+.ingredient .amount { color: var(--ink-soft); font-size: 14px; text-align: right; min-width: 0; overflow-wrap: anywhere; word-break: break-word; }
+.ingredient.critical .name { font-weight: 700; }
+.ingredient.critical .name::before { content: "● "; color: var(--accent); font-size: 10px; margin-right: 2px; vertical-align: 1px; }
 
-    .steps { display: flex; flex-direction: column; gap: 10px; }
-    .step { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; display: flex; gap: 12px; }
-    .step-num { flex-shrink: 0; width: 28px; height: 28px; background: var(--ink); color: var(--bg); border-radius: 50%; font-family: var(--serif); font-weight: 700; font-size: 15px; display: flex; align-items: center; justify-content: center; line-height: 1; }
-    .step-body { flex: 1; }
-    .step-text { line-height: 1.5; }
+.steps { display: flex; flex-direction: column; gap: 10px; }
+.step { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; display: flex; gap: 12px; }
+.step-num { flex-shrink: 0; width: 28px; height: 28px; background: var(--ink); color: var(--bg); border-radius: 50%; font-family: var(--serif); font-weight: 700; font-size: 15px; display: flex; align-items: center; justify-content: center; line-height: 1; }
+.step-body { flex: 1; min-width: 0; }
+.step-text { line-height: 1.5; overflow-wrap: anywhere; }
 
-    .timer-btn { display: inline-flex; align-items: center; gap: 8px; padding: 9px 14px; border-radius: 100px; font-weight: 700; font-size: 14px; margin-top: 10px; border: 2px solid transparent; min-height: 36px; }
-    .timer-btn.fixed { background: #FEE8DB; color: var(--accent); border-color: var(--accent-soft); }
-    .timer-btn.adjustable { background: #E0E8FF; color: var(--blue); border-color: #B5C3F5; }
-    @media (prefers-color-scheme: dark) {
-      .timer-btn.fixed { background: rgba(232,109,63,.15); border-color: rgba(232,109,63,.4); }
-      .timer-btn.adjustable { background: rgba(107,138,240,.15); border-color: rgba(107,138,240,.4); }
-    }
-    .timer-btn:active { transform: scale(0.96); }
-    .timer-btn .icon { font-size: 16px; line-height: 1; }
+.timer-btn { display: inline-flex; align-items: center; gap: 8px; padding: 9px 14px; border-radius: 100px; font-weight: 700; font-size: 14px; margin-top: 10px; border: 2px solid transparent; min-height: 36px; }
+.timer-btn.fixed { background: #FEE8DB; color: var(--accent); border-color: var(--accent-soft); }
+.timer-btn.adjustable { background: #E0E8FF; color: var(--blue); border-color: #B5C3F5; }
+@media (prefers-color-scheme: dark) {
+  .timer-btn.fixed { background: rgba(232,109,63,.15); border-color: rgba(232,109,63,.4); }
+  .timer-btn.adjustable { background: rgba(107,138,240,.15); border-color: rgba(107,138,240,.4); }
+}
+.timer-btn:active { transform: scale(0.96); }
+.timer-btn .icon { font-size: 16px; line-height: 1; }
 
-    .timer-active { margin-top: 10px; padding: 14px; background: var(--card); border: 2px solid var(--green); border-radius: var(--radius); }
-    .timer-active.paused { border-color: var(--gold); }
-    .timer-active .display { font-family: var(--serif); font-size: 44px; font-weight: 700; text-align: center; line-height: 1; margin-bottom: 10px; color: var(--green); }
-    .timer-active.paused .display { color: var(--gold); }
-    .timer-active .controls { display: flex; gap: 8px; }
-    .timer-active .controls button { flex: 1; padding: 8px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--warm); font-weight: 600; font-size: 13px; }
-    .timer-active .adj-row { display: flex; gap: 8px; margin-bottom: 10px; }
-    .timer-active input[type="number"] { flex: 1; padding: 8px 10px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--bg); color: var(--ink); font-family: inherit; font-size: 14px; }
-    .timer-active .save-btn { padding: 8px 14px; background: var(--blue); color: white; border: none; border-radius: var(--radius-sm); font-weight: 600; font-size: 13px; }
+.timer-active { margin-top: 10px; padding: 14px; background: var(--card); border: 2px solid var(--green); border-radius: var(--radius); }
+.timer-active.paused { border-color: var(--gold); }
+.timer-active .display { font-family: var(--serif); font-size: 44px; font-weight: 700; text-align: center; line-height: 1; margin-bottom: 10px; color: var(--green); }
+.timer-active.paused .display { color: var(--gold); }
+.timer-active .controls { display: flex; gap: 8px; }
+.timer-active .controls button { flex: 1; padding: 8px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--warm); font-weight: 600; font-size: 13px; }
+.timer-active .adj-row { display: flex; gap: 8px; margin-bottom: 10px; }
+.timer-active input[type="number"] { flex: 1; padding: 8px 10px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--bg); color: var(--ink); font-family: inherit; font-size: 14px; }
+.timer-active .save-btn { padding: 8px 14px; background: var(--blue); color: white; border: none; border-radius: var(--radius-sm); font-weight: 600; font-size: 13px; }
 
-    /* ─── PARAMS ─── */
-    .params { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
-    .param-row { display: flex; justify-content: space-between; padding: 10px 14px; border-bottom: 1px solid var(--line); gap: 12px; font-size: 14px; }
-    .param-row:last-child { border-bottom: none; }
-    .param-row .k { color: var(--ink-soft); font-weight: 500; flex-shrink: 0; }
-    .param-row .v { font-weight: 600; text-align: right; }
-    .param-row.internal-temp { background: linear-gradient(to right, rgba(181,69,27,.04), transparent); }
-    .param-row.internal-temp .v { color: var(--accent); }
-    .internal-temp-note { padding: 10px 14px; font-size: 13px; color: var(--ink-soft); background: var(--warm); border-top: 1px solid var(--line); line-height: 1.45; }
-    .internal-temp-note a { font-size: 12px; display: inline-block; margin-top: 6px; }
+/* PARAMS — grid для выравнивания */
+.params { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+.param-row {
+  display: grid;
+  grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+  gap: 12px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+  align-items: baseline;
+}
+.param-row:last-child { border-bottom: none; }
+.param-row .k { color: var(--ink-soft); font-weight: 500; min-width: 0; overflow-wrap: anywhere; }
+.param-row .v { font-weight: 600; text-align: right; min-width: 0; overflow-wrap: anywhere; word-break: break-word; }
+.param-row.internal-temp { background: linear-gradient(to right, rgba(181,69,27,.04), transparent); }
+.param-row.internal-temp .v { color: var(--accent); }
+.internal-temp-note { padding: 10px 14px; font-size: 13px; color: var(--ink-soft); background: var(--warm); border-top: 1px solid var(--line); line-height: 1.45; }
+.internal-temp-note a { font-size: 12px; display: inline-block; margin-top: 6px; }
 
-    /* ─── MISTAKES / TIPS ─── */
-    .callout { padding: 14px; border-radius: var(--radius); border: 1px solid; margin-bottom: 10px; font-size: 14px; line-height: 1.5; }
-    .callout.warning { background: rgba(200,144,58,.08); border-color: rgba(200,144,58,.3); }
-    .callout.tip { background: rgba(59,91,219,.06); border-color: rgba(59,91,219,.2); }
-    .callout.info { background: rgba(45,106,69,.06); border-color: rgba(45,106,69,.2); }
-    .callout-head { font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
-    .mistake { margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px dashed rgba(0,0,0,.08); }
-    .mistake:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
-    .mistake b { color: var(--accent); }
-    .mistake em { font-style: normal; color: var(--ink-soft); font-size: 13px; display: block; margin-top: 2px; }
+.callout { padding: 14px; border-radius: var(--radius); border: 1px solid; margin-bottom: 10px; font-size: 14px; line-height: 1.5; }
+.callout.warning { background: rgba(200,144,58,.08); border-color: rgba(200,144,58,.3); }
+.callout.tip { background: rgba(59,91,219,.06); border-color: rgba(59,91,219,.2); }
+.callout.info { background: rgba(45,106,69,.06); border-color: rgba(45,106,69,.2); }
+.callout-head { font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+.mistake { margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px dashed rgba(0,0,0,.08); }
+.mistake:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+.mistake b { color: var(--accent); }
+.mistake em { font-style: normal; color: var(--ink-soft); font-size: 13px; display: block; margin-top: 2px; }
 
-    ul.plain { list-style: none; padding: 0; }
-    ul.plain li { padding: 4px 0 4px 18px; position: relative; }
-    ul.plain li::before { content: "–"; position: absolute; left: 0; color: var(--ink-soft); font-weight: 600; }
+ul.plain { list-style: none; padding: 0; }
+ul.plain li { padding: 4px 0 4px 18px; position: relative; overflow-wrap: anywhere; }
+ul.plain li::before { content: "–"; position: absolute; left: 0; color: var(--ink-soft); font-weight: 600; }
 
-    .equipment { display: flex; flex-wrap: wrap; gap: 6px; }
-    .equipment .item { font-size: 13px; padding: 4px 10px; background: var(--warm); border-radius: 100px; color: var(--ink-soft); }
+.equipment { display: flex; flex-wrap: wrap; gap: 6px; }
+.equipment .item { font-size: 13px; padding: 4px 10px; background: var(--warm); border-radius: 100px; color: var(--ink-soft); }
 
-    .sub-table { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
-    .sub-row { padding: 11px 14px; border-bottom: 1px solid var(--line); }
-    .sub-row:last-child { border-bottom: none; }
-    .sub-row .orig { font-weight: 600; margin-bottom: 4px; }
-    .sub-row .alts { font-size: 14px; color: var(--ink-soft); }
-    .sub-row .note { font-size: 13px; color: var(--ink-soft); margin-top: 4px; font-style: italic; }
+.sub-table { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+.sub-row { padding: 11px 14px; border-bottom: 1px solid var(--line); }
+.sub-row:last-child { border-bottom: none; }
+.sub-row .orig { font-weight: 600; margin-bottom: 4px; overflow-wrap: anywhere; }
+.sub-row .alts { font-size: 14px; color: var(--ink-soft); overflow-wrap: anywhere; }
+.sub-row .note { font-size: 13px; color: var(--ink-soft); margin-top: 4px; font-style: italic; overflow-wrap: anywhere; }
 
-    .alt-row { padding: 12px 14px; border-bottom: 1px solid var(--line); }
-    .alt-row:last-child { border-bottom: none; }
-    .alt-row .dev { font-weight: 700; margin-bottom: 2px; }
-    .alt-row .mode { font-size: 13px; color: var(--ink-soft); }
-    .alt-row .time { font-size: 14px; margin-top: 4px; color: var(--accent); font-weight: 600; }
-    .alt-row .note { font-size: 13px; color: var(--ink-soft); margin-top: 4px; font-style: italic; }
+.alt-row { padding: 12px 14px; border-bottom: 1px solid var(--line); }
+.alt-row:last-child { border-bottom: none; }
+.alt-row .dev { font-weight: 700; margin-bottom: 2px; overflow-wrap: anywhere; }
+.alt-row .mode { font-size: 13px; color: var(--ink-soft); overflow-wrap: anywhere; }
+.alt-row .time { font-size: 14px; margin-top: 4px; color: var(--accent); font-weight: 600; overflow-wrap: anywhere; }
+.alt-row .note { font-size: 13px; color: var(--ink-soft); margin-top: 4px; font-style: italic; overflow-wrap: anywhere; }
 
-    .sources { font-size: 13px; color: var(--ink-soft); }
-    .sources .src { padding: 6px 0; border-bottom: 1px solid var(--line); }
-    .sources .src:last-child { border: none; }
-    .sources .src .type { font-size: 11px; padding: 2px 8px; background: var(--warm); border-radius: 100px; font-weight: 600; margin-right: 6px; text-transform: uppercase; letter-spacing: 0.04em; }
-    .sources a { display: inline-block; }
+.sources { font-size: 13px; color: var(--ink-soft); }
+.sources .src { padding: 6px 0; border-bottom: 1px solid var(--line); }
+.sources .src:last-child { border: none; }
+.sources .src .type { font-size: 11px; padding: 2px 8px; background: var(--warm); border-radius: 100px; font-weight: 600; margin-right: 6px; text-transform: uppercase; letter-spacing: 0.04em; }
+.sources a { display: inline-block; overflow-wrap: anywhere; word-break: break-word; }
 
-    .prep-ahead { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; font-size: 14px; line-height: 1.55; white-space: pre-wrap; }
+.prep-ahead { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; font-size: 14px; line-height: 1.55; white-space: pre-wrap; overflow-wrap: anywhere; }
 
-    .serving-info { padding: 14px; background: var(--warm); border-radius: var(--radius); font-size: 14px; }
-    .serving-info .kv { display: flex; padding: 4px 0; gap: 8px; }
-    .serving-info .kv b { color: var(--ink-soft); font-weight: 600; width: 90px; flex-shrink: 0; }
+.serving-info { padding: 14px; background: var(--warm); border-radius: var(--radius); font-size: 14px; }
+.serving-info .kv { display: flex; padding: 4px 0; gap: 8px; }
+.serving-info .kv b { color: var(--ink-soft); font-weight: 600; width: 90px; flex-shrink: 0; }
+.serving-info .kv > div { min-width: 0; overflow-wrap: anywhere; }
 
-    /* ─── COOK MODE (полноэкран) ─── */
-    .cook-overlay { position: fixed; inset: 0; background: var(--bg); z-index: 100; display: flex; flex-direction: column; padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); }
-    .cook-head { padding: 12px 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--line); }
-    .cook-head .close { font-size: 16px; font-weight: 600; padding: 6px 12px; background: var(--card); border-radius: 10px; }
-    .cook-head .title { flex: 1; font-family: var(--serif); font-weight: 600; font-size: 16px; text-align: center; }
-    .cook-head .progress { font-size: 13px; color: var(--ink-soft); font-weight: 600; }
+.cook-overlay { position: fixed; inset: 0; background: var(--bg); z-index: 100; display: flex; flex-direction: column; padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); }
+.cook-head { padding: 12px 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--line); }
+.cook-head .close { font-size: 16px; font-weight: 600; padding: 6px 12px; background: var(--card); border-radius: 10px; }
+.cook-head .title { flex: 1; font-family: var(--serif); font-weight: 600; font-size: 16px; text-align: center; }
+.cook-head .progress { font-size: 13px; color: var(--ink-soft); font-weight: 600; }
 
-    .cook-track { flex: 1; overflow: hidden; position: relative; }
-    .cook-slides { display: flex; height: 100%; transition: transform .3s cubic-bezier(.2,.9,.3,1); will-change: transform; }
-    .cook-slide { flex: 0 0 100%; padding: 24px 24px 20px; display: flex; flex-direction: column; overflow-y: auto; }
-    .cook-slide .section-name { font-size: 13px; color: var(--ink-soft); text-transform: uppercase; font-weight: 700; letter-spacing: 0.06em; margin-bottom: 12px; }
-    .cook-slide .step-num { width: auto; height: auto; padding: 6px 14px; background: var(--ink); color: var(--bg); font-size: 14px; border-radius: 100px; margin-bottom: 16px; align-self: flex-start; font-family: var(--sans); font-weight: 700; }
-    .cook-slide .step-text { font-family: var(--serif); font-size: 28px; font-weight: 500; line-height: 1.3; color: var(--ink); }
-    .cook-slide .timer-area { margin-top: 24px; }
-    .cook-slide .timer-btn { font-size: 18px; padding: 14px 20px; min-height: 56px; }
-    .cook-slide .timer-active .display { font-size: 72px; margin-bottom: 16px; }
-    .cook-slide .timer-active .controls button { padding: 14px; font-size: 15px; }
+.cook-track { flex: 1; overflow: hidden; position: relative; }
+.cook-slides { display: flex; height: 100%; transition: transform .3s cubic-bezier(.2,.9,.3,1); will-change: transform; }
+.cook-slide { flex: 0 0 100%; padding: 24px 24px 20px; display: flex; flex-direction: column; overflow-y: auto; }
+.cook-slide .section-name { font-size: 13px; color: var(--ink-soft); text-transform: uppercase; font-weight: 700; letter-spacing: 0.06em; margin-bottom: 12px; }
+.cook-slide .step-num { width: auto; height: auto; padding: 6px 14px; background: var(--ink); color: var(--bg); font-size: 14px; border-radius: 100px; margin-bottom: 16px; align-self: flex-start; font-family: var(--sans); font-weight: 700; }
+.cook-slide .step-text { font-family: var(--serif); font-size: 28px; font-weight: 500; line-height: 1.3; color: var(--ink); overflow-wrap: anywhere; }
+.cook-slide .timer-area { margin-top: 24px; }
+.cook-slide .timer-btn { font-size: 18px; padding: 14px 20px; min-height: 56px; }
+.cook-slide .timer-active .display { font-size: 72px; margin-bottom: 16px; }
+.cook-slide .timer-active .controls button { padding: 14px; font-size: 15px; }
 
-    .cook-nav { display: flex; gap: 8px; padding: 16px 20px 20px; border-top: 1px solid var(--line); }
-    .cook-nav button { flex: 1; padding: 14px; border-radius: var(--radius); font-weight: 700; font-size: 15px; border: 1px solid var(--line); background: var(--card); color: var(--ink); }
-    .cook-nav button:active { background: var(--warm); transform: scale(0.98); }
-    .cook-nav button.primary { background: var(--accent); color: white; border-color: var(--accent); }
-    .cook-nav button:disabled { opacity: 0.3; }
+.cook-nav { display: flex; gap: 8px; padding: 16px 20px 20px; border-top: 1px solid var(--line); }
+.cook-nav button { flex: 1; padding: 14px; border-radius: var(--radius); font-weight: 700; font-size: 15px; border: 1px solid var(--line); background: var(--card); color: var(--ink); }
+.cook-nav button:active { background: var(--warm); transform: scale(0.98); }
+.cook-nav button.primary { background: var(--accent); color: white; border-color: var(--accent); }
+.cook-nav button:disabled { opacity: 0.3; }
 
-    /* ─── LEGACY v0 fallback ─── */
-    .legacy-notice { padding: 10px 14px; background: rgba(200,144,58,.1); border: 1px solid rgba(200,144,58,.3); border-radius: var(--radius-sm); font-size: 13px; color: var(--ink-soft); margin-bottom: 16px; }
+.legacy-notice { padding: 10px 14px; background: rgba(200,144,58,.1); border: 1px solid rgba(200,144,58,.3); border-radius: var(--radius-sm); font-size: 13px; color: var(--ink-soft); margin-bottom: 16px; }
 
-    /* ─── LOADING / ERROR ─── */
-    .loading, .error { padding: 60px 20px; text-align: center; }
-    .loading .spin { width: 32px; height: 32px; border: 3px solid var(--line); border-top-color: var(--accent); border-radius: 50%; margin: 0 auto 16px; animation: spin 0.8s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .error { color: var(--red); }
-    .error code { display: block; margin-top: 12px; padding: 10px; background: var(--warm); border-radius: var(--radius-sm); font-size: 12px; color: var(--ink-soft); text-align: left; word-break: break-word; }
+.loading, .error { padding: 60px 20px; text-align: center; }
+.loading .spin { width: 32px; height: 32px; border: 3px solid var(--line); border-top-color: var(--accent); border-radius: 50%; margin: 0 auto 16px; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.error { color: var(--red); }
+.error code { display: block; margin-top: 12px; padding: 10px; background: var(--warm); border-radius: var(--radius-sm); font-size: 12px; color: var(--ink-soft); text-align: left; word-break: break-word; }
 
-    /* ─── Warnings (v1) ─── */
-    .warnings { margin-bottom: 16px; font-size: 12px; color: var(--ink-soft); }
-    .warnings summary { cursor: pointer; padding: 8px 12px; background: rgba(200,144,58,.1); border-radius: var(--radius-sm); font-weight: 600; }
-    .warnings ul { margin-top: 6px; padding: 8px 12px; }
-    .warnings li { margin: 4px 0 4px 16px; list-style: disc; }
+.warnings { margin-bottom: 16px; font-size: 12px; color: var(--ink-soft); }
+.warnings summary { cursor: pointer; padding: 8px 12px; background: rgba(200,144,58,.1); border-radius: var(--radius-sm); font-weight: 600; }
+.warnings ul { margin-top: 6px; padding: 8px 12px; }
+.warnings li { margin: 4px 0 4px 16px; list-style: disc; }
+```
+
   </style>
 </head>
 <body>
   <div id="app" class="app"></div>
-
   <script>
-  // ─── STATE ───────────────────────────────────────────────────────
   const state = {
-    view: 'loading',        // 'loading' | 'list' | 'recipe' | 'cook'
+    view: 'loading',
     recipes: [],
-    filters: {              // выбранные значения
-      category: null,       // string | null
-      for_whom: new Set(),
-      meal_type: null,
-      main_ingredient: null,
-    },
-    availableFilters: {     // данные из /api/recipes
-      categories: [],
-      for_whom: [],
-      techniques: [],
-    },
+    filters: { category: null, for_whom: new Set() },
+    availableFilters: { categories: [], for_whom: [], techniques: [] },
     recipeId: null,
-    recipeData: null,       // v1 data
-    recipeLegacy: null,     // v0 blocks
-    recipeMeta: null,       // last_edited, created_at
+    recipeData: null,
+    recipeLegacy: null,
+    recipeMeta: null,
     recipeError: null,
-    cookSlides: [],         // [{sectionName, stepIndex, step}]
+    cookSlides: [],
     cookIndex: 0,
   };
 
-  const timers = new Map(); // stepKey -> {remain, duration, running, intervalId, elemCb}
-  let scrollWatcher = null;
+function parseHash() {
+const h = location.hash.replace(/^#/, ‘’);
+if (!h) return { view: ‘list’ };
+const params = new URLSearchParams(h);
+const id = params.get(‘r’);
+if (id) {
+if (params.has(‘cook’)) return { view: ‘cook’, id };
+return { view: ‘recipe’, id };
+}
+return { view: ‘list’ };
+}
+function navigate(hash) {
+if (location.hash === hash) { render(); return; }
+location.hash = hash;
+}
+window.addEventListener(‘hashchange’, boot);
+
+async function fetchJSON(url) {
+const r = await fetch(url);
+if (!r.ok) throw new Error(`HTTP ${r.status}`);
+return r.json();
+}
+async function loadRecipes() {
+if (state.recipes.length > 0) return;
+const res = await fetchJSON(’/api/recipes’);
+state.recipes = res.recipes || [];
+state.availableFilters = res.filters || state.availableFilters;
+}
+async function loadRecipe(id) {
+state.recipeError = null;
+state.recipeData = null;
+state.recipeLegacy = null;
+const res = await fetchJSON(`/api/page?id=${encodeURIComponent(id)}`);
+state.recipeMeta = { last_edited: res.last_edited, created_at: res.created_at };
+if (res.error) { state.recipeError = res; return; }
+if (res.format === ‘v1’) { state.recipeData = res.data; state.recipeWarnings = res.warnings || []; }
+else if (res.format === ‘v0’) state.recipeLegacy = res.blocks || [];
+}
+async function boot() {
+const route = parseHash();
+state.view = route.view;
+state.recipeId = route.id || null;
+if (state.view === ‘list’) {
+render();
+try { await loadRecipes(); render(); } catch (e) { renderError(e.message); }
+return;
+}
+if (state.view === ‘recipe’ || state.view === ‘cook’) {
+if (!state.recipeData && !state.recipeLegacy || state.recipeId !== state._lastLoadedId) {
+state.view = ‘loading’; render();
+try { await loadRecipe(state.recipeId); state._lastLoadedId = state.recipeId; }
+catch (e) { state.recipeError = { error: ‘fetch_failed’, message: e.message }; }
+}
+if (state.recipeData) prepareCookSlides();
+state.view = route.view;
+render();
+}
+}
+function prepareCookSlides() {
+const slides = [];
+for (const sec of state.recipeData.sections) {
+if (sec.type !== ‘linear’) continue;
+const steps = sec.steps || [];
+for (let i = 0; i < steps.length; i++) slides.push({ sectionName: sec.name, stepIndex: i + 1, step: steps[i] });
+}
+state.cookSlides = slides;
+state.cookIndex = 0;
+}
+function render() {
+const app = document.getElementById(‘app’);
+if (state.view === ‘loading’) app.innerHTML = loadingHTML();
+else if (state.view === ‘list’) app.innerHTML = listHTML();
+else if (state.view === ‘recipe’) { app.innerHTML = recipeHTML(); attachRecipeHandlers(); }
+else if (state.view === ‘cook’) { app.innerHTML = cookHTML(); attachCookHandlers(); }
+window.scrollTo(0, 0);
+}
+function renderError(msg) { document.getElementById(‘app’).innerHTML = `<div class="error"><div>Не удалось загрузить рецепты</div><code>${escapeHTML(msg)}</code></div>`; }
+function listHTML() {
+const all = state.recipes;
+const filtered = applyFilters(all);
+const f = state.filters;
+const catChips = [chip(‘Все’, !f.category, ‘cat:null’), …state.availableFilters.categories.map(c => chip(c, f.category === c, `cat:${encodeURIComponent(c)}`, countFor(all, r => r.category === c)))].join(’’);
+const whomChips = state.availableFilters.for_whom.map(w => chip(w, f.for_whom.has(w), `whom:${encodeURIComponent(w)}`, countFor(all, r => (r.for_whom||[]).includes(w)))).join(’’);
+const body = filtered.length === 0 ? `<div class="empty"><div class="empty-icon">🍽️</div>По этим фильтрам рецептов нет</div>` : `<div class="list">${filtered.map(listItemHTML).join('')}</div>`;
+return `<div class="header"><div class="title">Рецепты</div></div><div class="filter-bar">${catChips}</div>${whomChips ? `<div class="filter-bar">${whomChips}</div>` : ''}<div style="font-size:13px;color:var(--ink-soft);padding:4px 0 12px;">${filtered.length} из ${all.length}</div>${body}`;
+}
+function listItemHTML(r) {
+const meta = [r.category, r.time_text || null, (r.for_whom || []).join(’ · ‘)].filter(Boolean);
+const metaHTML = meta.map((m,i) => i === 0 ? escapeHTML(m) : `<span class="dot">·</span>${escapeHTML(m)}`).join(’ ‘);
+return `<a class="list-item ${r.tested ? '' : 'untested'}" href="#r=${r.id}" onclick="event.stopPropagation()"><div class="emoji">${r.icon || '🍽️'}</div><div class="main"><div class="name">${escapeHTML(r.title)}</div><div class="meta">${metaHTML}</div></div></a>`;
+}
+function applyFilters(recipes) {
+const f = state.filters;
+return recipes.filter(r => {
+if (f.category && r.category !== f.category) return false;
+if (f.for_whom.size > 0) { const anyMatch = (r.for_whom || []).some(w => f.for_whom.has(w)); if (!anyMatch) return false; }
+return true;
+});
+}
+function countFor(recipes, pred) { return recipes.filter(pred).length; }
+function chip(label, active, action, count) {
+const cntHTML = (typeof count === ‘number’ && count > 0 && !active) ? `<span class="count">${count}</span>` : ‘’;
+return `<button class="chip ${active?'active':''}" data-action="${action}">${escapeHTML(label)}${cntHTML}</button>`;
+}
+document.addEventListener(‘click’, (e) => {
+const c = e.target.closest(’.chip[data-action]’);
+if (!c) return;
+const [kind, value] = c.dataset.action.split(’:’);
+const v = value && value !== ‘null’ ? decodeURIComponent(value) : null;
+if (kind === ‘cat’) state.filters.category = (state.filters.category === v) ? null : v;
+else if (kind === ‘whom’) { const s = state.filters.for_whom; if (s.has(v)) s.delete(v); else s.add(v); }
+render();
+});
+function recipeHTML() {
+if (state.recipeError) return errorHTML(state.recipeError);
+if (state.recipeData) return recipeV1HTML(state.recipeData, state.recipeWarnings || []);
+if (state.recipeLegacy) return recipeV0HTML(state.recipeLegacy);
+return loadingHTML();
+}
+function errorHTML(err) {
+return `<div class="back-bar"><a class="back-btn" href="#">← Назад</a></div><div class="error"><div style="font-size:20px;font-family:var(--serif);margin-bottom:8px;">Рецепт не отобразился</div><div style="color:var(--ink-soft);font-size:14px;">${escapeHTML(err.message || err.error || 'неизвестная ошибка')}</div>${err.details ? `<code>${err.details.map(d => escapeHTML(d.path + ‘: ’ + d.message)).join(’\n’)}</code>`: ''}${err.raw_snippet ?`<code>${escapeHTML(err.raw_snippet)}</code>` : ''}</div>`;
+}
+function recipeV1HTML(d, warnings) {
+const classification = [d.category ? `<span class="tag category">${escapeHTML(d.category)}</span>` : ‘’, …(d.for_whom || []).map(w => `<span class="tag ${w === 'Дети 12+ мес.' ? 'for-kids' : ''}">${escapeHTML(w)}</span>`), …(d.tags || []).slice(0, 4).map(t => `<span class="tag">${escapeHTML(tagLabel(t))}</span>`)].filter(Boolean).join(’’);
+const quickFacts = `<div class="quick-facts"><div class="fact"><div class="val">${d.time_min}</div><div class="unit">мин</div></div>${d.active_time_min && d.active_time_min !== d.time_min ? `<div class="fact"><div class="val">${d.active_time_min}</div><div class="unit">актив.</div></div>`:`<div class="fact"><div class="val">${totalServings(d)}</div><div class="unit">порц.</div></div>`}<div class="fact"><div class="val">${d.kbju.kcal}</div><div class="unit">ккал</div></div><div class="fact"><div class="val">${difficultyLabel(d.difficulty)}</div><div class="unit">сложн.</div></div></div>`;
+const kbju = `<div class="kbju-row"><div class="kv"><b>${d.kbju.kcal}</b><span>ккал</span></div><div class="kv"><b>${d.kbju.protein_g}</b><span>белок</span></div><div class="kv"><b>${d.kbju.fat_g}</b><span>жиры</span></div><div class="kv"><b>${d.kbju.carbs_g}</b><span>углев.</span></div><div class="kv"><b>${d.kbju.portion_g}</b><span>г/порц.</span></div></div>${d.kbju_kid ? `<div class="kbju-row" style="background:rgba(232,109,63,.08);"><div class="kv" style="font-size:11px;"><b style="font-size:12px;">ДЕТСКАЯ</b></div><div class="kv"><b>${d.kbju_kid.kcal}</b><span>ккал</span></div><div class="kv"><b>${d.kbju_kid.protein_g}</b><span>белок</span></div><div class="kv"><b>${d.kbju_kid.fat_g}</b><span>жиры</span></div><div class="kv"><b>${d.kbju_kid.carbs_g}</b><span>углев.</span></div><div class="kv"><b>${d.kbju_kid.portion_g}</b><span>г/порц.</span></div></div>` : ''}`;
+const hasLinearSteps = (d.sections || []).some(s => s.type === ‘linear’ && (s.steps || []).length > 0);
+const cookBtn = hasLinearSteps ? `<button class="cook-btn" onclick="navigate('#r=${state.recipeId}&cook')">▶ Готовим сейчас</button>` : ‘’;
+const sectionsHTML = (d.sections || []).map(renderSection).join(’’);
+const warningsHTML = warnings.length > 0 ? `<details class="warnings"><summary>⚠ ${warnings.length} ${plural(warnings.length, 'предупреждение', 'предупреждения', 'предупреждений')} валидатора</summary><ul>${warnings.map(w => `<li>${escapeHTML(w.message)}</li>`).join('')}</ul></details>` : ‘’;
+return `<div class="back-bar" id="backBar"><a class="back-btn" href="#">← Назад</a></div><div class="recipe-header">${d.icon ? `<div class="emoji">${d.icon}</div>`: ''}<div class="title">${escapeHTML(d.title)}</div>${d.source_note ?`<div class="source-note">${escapeHTML(d.source_note)}</div>`: ''}</div>${classification ?`<div class="classification">${classification}</div>`: ''}${warningsHTML}${quickFacts}${kbju}${d.yield_note ?`<div style="text-align:center;font-size:13px;color:var(--ink-soft);margin-bottom:20px;">${escapeHTML(d.yield_note)}</div>`: ''}${cookBtn}${sectionsHTML}${d.params ? renderParams(d.params) : ''}${d.equipment && d.equipment.length ? renderEquipment(d.equipment) : ''}${d.alternatives && d.alternatives.length ? renderAlternatives(d.alternatives) : ''}${d.substitutions && d.substitutions.length ? renderSubstitutions(d.substitutions) : ''}${d.prep_ahead ? renderPrepAhead(d.prep_ahead) : ''}${d.serving ? renderServing(d.serving) : ''}${d.mistakes && d.mistakes.length ? renderMistakes(d.mistakes) : ''}${d.tips && d.tips.length ? renderTips(d.tips) : ''}${d.storage ? renderStorage(d.storage) : ''}${d.video_url ?`<div class="section"><h4>Видео</h4><a href="${escapeHTML(d.video_url)}" target="_blank" rel="noopener">${escapeHTML(d.video_url)}</a></div>` : ''}${d.sources && d.sources.length ? renderSources(d.sources) : ''}`;
+}
+function renderSection(sec) {
+const single = state.recipeData.sections.length === 1;
+const title = (!single) ? `<div class="section-title">${escapeHTML(sec.name)}</div>` : ‘’;
+const note = sec.note ? `<div class="section-note">${escapeHTML(sec.note)}</div>` : ‘’;
+if (sec.type === ‘ingredient_group’) return `<div class="section">${title}${note}<div class="ingredients">${(sec.ingredients||[]).map(renderIngredient).join('')}</div></div>`;
+const ings = (sec.ingredients || []).length > 0 ? `<h4 style="margin-bottom:8px;">Ингредиенты</h4><div class="ingredients" style="margin-bottom:16px;">${sec.ingredients.map(renderIngredient).join('')}</div>` : ‘’;
+const steps = (sec.steps || []).length > 0 ? `<h4 style="margin-bottom:8px;">Приготовление</h4><div class="steps">${sec.steps.map((s, i) => renderStep(s, i+1, sec.name)).join('')}</div>` : ‘’;
+return `<div class="section">${title}${note}${ings}${steps}</div>`;
+}
+function renderIngredient(ing) { return `<div class="ingredient ${ing.critical ? 'critical' : ''}"><div class="name">${escapeHTML(ing.name)}</div><div class="amount">${escapeHTML(ing.amount_text)}</div></div>`; }
+function renderStep(step, n, sectionName) {
+const key = `${state.recipeId}::${sectionName}::${n}`;
+const timerHTML = step.timer_min ? renderTimerBtn(step, key) : ‘’;
+return `<div class="step"><div class="step-num">${n}</div><div class="step-body"><div class="step-text">${escapeHTML(step.text)}</div>${timerHTML}</div></div>`;
+}
+function renderTimerBtn(step, key) {
+const saved = typeof localStorage !== ‘undefined’ ? localStorage.getItem(`tm_${key}`) : null;
+const minutes = saved ? parseFloat(saved) : step.timer_min;
+const rangeText = step.timer_range ? `${step.timer_range[0]}–${step.timer_range[1]}` : formatMin(minutes);
+return `<div class="timer-slot" data-key="${escapeAttr(key)}" data-minutes="${minutes}" data-type="${step.timer_type}" data-range='${JSON.stringify(step.timer_range||null)}'><button class="timer-btn ${step.timer_type}" data-timer-start><span class="icon">⏱</span><span>${rangeText} мин</span></button></div>`;
+}
+function renderParams(p) {
+const rows = [kv(‘Техника’, p.device), p.mode && kv(‘Режим’, p.mode), p.level && kv(‘Уровень’, p.level), p.temp_c != null && kv(‘Температура’, `${p.temp_c}°C`), kv(‘Время’, p.time_text), p.output && kv(‘Выход’, p.output)].filter(Boolean).join(’’);
+const tempRow = p.internal_temp ? `<div class="param-row internal-temp"><div class="k">🌡 Внутри</div><div class="v">${p.internal_temp.value_c}°C</div></div><div class="internal-temp-note">${escapeHTML(p.internal_temp.note)}${p.internal_temp.source ? `<br><a href="${sourceUrl(p.internal_temp.source)}" target="_blank" rel="noopener">Источник ↗</a>` : ''}</div>` : ‘’;
+return `<div class="section"><h4>Параметры</h4><div class="params">${rows}${tempRow}<div class="param-row"><div class="k">Готовность</div><div class="v" style="font-weight:500;font-size:13px;">${escapeHTML(p.readiness)}</div></div></div></div>`;
+}
+function kv(k, v) { return `<div class="param-row"><div class="k">${escapeHTML(k)}</div><div class="v">${escapeHTML(v)}</div></div>`; }
+function renderEquipment(list) { return `<div class="section"><h4>Инвентарь</h4><div class="equipment">${list.map(e => `<span class="item">${escapeHTML(e)}</span>`).join('')}</div></div>`; }
+function renderAlternatives(list) { return `<div class="section"><h4>Альтернативная техника</h4><div class="params">${list.map(a => `<div class="alt-row"><div class="dev">${escapeHTML(a.device)}</div>${a.mode ? `<div class="mode">${escapeHTML(a.mode)}</div>` : ‘’}<div class="time">${escapeHTML(a.time_text)}</div>${a.note ? `<div class="note">${escapeHTML(a.note)}</div>` : ‘’}</div>`).join('')}</div></div>`; }
+function renderSubstitutions(list) { return `<div class="section"><h4>Замены</h4><div class="sub-table">${list.map(s => `<div class="sub-row"><div class="orig">${escapeHTML(s.original)}</div><div class="alts">→ ${s.alternatives.map(escapeHTML).join(’ · ‘)}</div>${s.note ? `<div class="note">${escapeHTML(s.note)}</div>` : ‘’}</div>`).join('')}</div></div>`; }
+function renderPrepAhead(text) { return `<div class="section"><h4>Заранее / в день</h4><div class="prep-ahead">${escapeHTML(text)}</div></div>`; }
+function renderServing(s) { return `<div class="section"><h4>Подача</h4><div class="serving-info">${s.temp_c != null ? `<div class="kv"><b>Температура</b><div>${s.temp_c}°C</div></div>`: ''}${s.pairs_with ?`<div class="kv"><b>Сочетается</b><div>${escapeHTML(s.pairs_with)}</div></div>`: ''}${s.size_note ?`<div class="kv"><b>Порция</b><div>${escapeHTML(s.size_note)}</div></div>` : ''}</div></div>`; }
+function renderMistakes(list) { return `<div class="section"><h4>Частые ошибки</h4><div class="callout warning"><div class="callout-head">⚠ Если что-то пошло не так</div>${list.map(m => `<div class="mistake"><b>${escapeHTML(m.symptom)}</b><br><em>Причина: ${escapeHTML(m.cause)}</em><div style="margin-top:4px;">→ ${escapeHTML(m.fix)}</div></div>`).join('')}</div></div>`; }
+function renderTips(list) { return `<div class="section"><h4>Советы</h4><div class="callout tip"><div class="callout-head">💡 Полезно знать</div><ul class="plain">${list.map(t => `<li>${escapeHTML(t)}</li>`).join('')}</ul></div></div>`; }
+function renderStorage(s) {
+const items = [];
+if (s.fridge_days != null) items.push(`Холодильник: <b>${s.fridge_days} ${plural(s.fridge_days, 'день', 'дня', 'дней')}</b>`);
+if (s.freezer_months != null) items.push(`Морозилка: <b>${s.freezer_months} ${plural(s.freezer_months, 'месяц', 'месяца', 'месяцев')}</b>`);
+if (s.reheat) items.push(`Разогрев: ${escapeHTML(s.reheat)}`);
+return `<div class="section"><h4>Хранение</h4><div class="callout info"><div class="callout-head">ℹ Свежесть</div><ul class="plain">${items.map(i => `<li>${i}</li>`).join('')}</ul></div></div>`;
+}
+function renderSources(list) { return `<div class="section"><h4>Источники</h4><div class="sources">${list.map(s => `<div class="src">${s.type ? `<span class="type">${escapeHTML(s.type)}</span>` : ‘’}<a href="${escapeHTML(s.url)}" target="_blank" rel="noopener">${escapeHTML(s.label)} ↗</a></div>`).join('')}</div></div>`; }
+function recipeV0HTML(blocks) {
+const sections = parseV0Blocks(blocks);
+return `<div class="back-bar"><a class="back-btn" href="#">← Назад</a></div><div class="legacy-notice">⚠ Этот рецепт ещё в старом формате. Будет мигрирован в новую схему.</div><div style="padding: 0 4px;">${sections.map(renderV0Section).join('')}</div>`;
+}
+function parseV0Blocks(blocks) {
+const sections = [];
+let current = { title: null, ing: [], steps: [], params: [], notes: [], mode: null };
+const push = () => { if (current.ing.length || current.steps.length || current.params.length || current.notes.length || current.title) sections.push(current); };
+for (const b of blocks) {
+const t = b.type;
+if (t === ‘heading_2’ || t === ‘heading_3’) {
+push();
+const name = extractV0Text(b[t]?.rich_text || []);
+const lower = name.toLowerCase();
+const hidden = [‘ингредиенты’,‘состав’,‘приготовление’,‘шаги’,‘порядок’,‘параметры’].some(k => lower.includes(k));
+const mode = lower.includes(‘ингред’) || lower.includes(‘состав’) ? ‘ing’ : lower.includes(‘приготовл’) || lower.includes(‘шаг’) ? ‘steps’ : lower.includes(‘параметр’) ? ‘params’ : null;
+current = { title: hidden ? null : name, ing: [], steps: [], params: [], notes: [], mode };
+} else if (t === ‘table’ && b._children) {
+for (let i = 0; i < b._children.length; i++) {
+const row = b._children[i];
+if (b.table?.has_column_header && i === 0) continue;
+const cells = (row.table_row?.cells || []).map(c => extractV0Text(c));
+if (current.mode === ‘params’) current.params.push([cells[0] || ‘’, cells.slice(1).join(’ — ‘)]);
+else current.ing.push([cells[0] || ‘’, cells.slice(1).join(’ — ‘)]);
+}
+} else if (t === ‘numbered_list_item’) current.steps.push(extractV0Text(b.numbered_list_item?.rich_text || []));
+else if (t === ‘bulleted_list_item’) {
+const txt = extractV0Text(b.bulleted_list_item?.rich_text || []);
+if (current.mode === ‘ing’) current.ing.push([’’, txt]); else current.notes.push(txt);
+} else if (t === ‘callout’) current.notes.push(extractV0Text(b.callout?.rich_text || []));
+else if (t === ‘paragraph’) {
+const txt = extractV0Text(b.paragraph?.rich_text || []);
+if (txt.trim()) current.notes.push(txt);
+}
+}
+push();
+return sections;
+}
+function extractV0Text(richText) { return (richText || []).map(r => r.plain_text || ‘’).join(’’); }
+function renderV0Section(sec) {
+const title = sec.title ? `<h3 style="margin-bottom:10px;margin-top:16px;">${escapeHTML(sec.title)}</h3>` : ‘’;
+const ing = sec.ing.length ? `<div class="ingredients" style="margin-bottom:12px;">${sec.ing.map(([n,a]) => `<div class="ingredient"><div class="name">${escapeHTML(n)}</div><div class="amount">${escapeHTML(a)}</div></div>`).join('')}</div>` : ‘’;
+const steps = sec.steps.length ? `<ol style="padding-left:20px;margin-bottom:12px;line-height:1.55;">${sec.steps.map(s => `<li style="margin-bottom:8px;">${escapeHTML(s)}</li>`).join('')}</ol>` : ‘’;
+const params = sec.params.length ? `<div class="params" style="margin-bottom:12px;">${sec.params.map(([k,v]) => `<div class="param-row"><div class="k">${escapeHTML(k)}</div><div class="v">${escapeHTML(v)}</div></div>`).join('')}</div>` : ‘’;
+const notes = sec.notes.length ? `<div style="margin-bottom:12px;">${sec.notes.map(n => `<div style="padding:8px 0;color:var(--ink-soft);font-size:14px;">${escapeHTML(n)}</div>`).join('')}</div>` : ‘’;
+return `<div>${title}${ing}${steps}${params}${notes}</div>`;
+}
+function cookHTML() {
+const d = state.recipeData;
+if (!d || state.cookSlides.length === 0) return `<div class="cook-overlay"><div class="cook-head"><button class="close" onclick="navigate('#r=${state.recipeId}')">✕</button><div class="title">Готовим</div></div><div class="error" style="padding:60px 20px;">Нет шагов для режима готовки</div></div>`;
+const total = state.cookSlides.length;
+const curIdx = state.cookIndex;
+const slides = state.cookSlides.map((s, i) => `<div class="cook-slide" data-idx="${i}"><div class="section-name">${d.sections.length > 1 ? escapeHTML(s.sectionName) : `Шаг ${s.stepIndex} из ${(d.sections.find(sec => sec.name === s.sectionName)?.steps||[]).length}`}</div><div class="step-num">Шаг ${i+1} / ${total}</div><div class="step-text">${escapeHTML(s.step.text)}</div>${s.step.timer_min ? `<div class="timer-area">${renderTimerBtn(s.step, `cook::${state.recipeId}::${i}`)}</div>` : ''}</div>`).join(’’);
+return `<div class="cook-overlay"><div class="cook-head"><button class="close" onclick="navigate('#r=${state.recipeId}')">✕</button><div class="title">${escapeHTML(d.title)}</div><div class="progress">${curIdx+1}/${total}</div></div><div class="cook-track" id="cookTrack"><div class="cook-slides" id="cookSlides" style="transform:translateX(-${curIdx*100}%);">${slides}</div></div><div class="cook-nav"><button id="cookPrev" ${curIdx === 0 ? 'disabled' : ''}>← Назад</button><button id="cookNext" class="${curIdx === total-1 ? '' : 'primary'}">${curIdx === total-1 ? 'Готово ✓' : 'Далее →'}</button></div></div>`;
+}
+function attachCookHandlers() {
+const next = document.getElementById(‘cookNext’), prev = document.getElementById(‘cookPrev’), track = document.getElementById(‘cookTrack’), slides = document.getElementById(‘cookSlides’);
+if (!next || !prev || !track || !slides) return;
+const total = state.cookSlides.length;
+const moveTo = (idx) => {
+state.cookIndex = Math.max(0, Math.min(total-1, idx));
+slides.style.transform = `translateX(-${state.cookIndex*100}%)`;
+document.querySelector(’.cook-head .progress’).textContent = `${state.cookIndex+1}/${total}`;
+prev.disabled = state.cookIndex === 0;
+if (state.cookIndex === total-1) { next.textContent = ‘Готово ✓’; next.classList.remove(‘primary’); }
+else { next.textContent = ‘Далее →’; next.classList.add(‘primary’); }
+};
+next.addEventListener(‘click’, () => { if (state.cookIndex === total-1) navigate(`#r=${state.recipeId}`); else moveTo(state.cookIndex + 1); });
+prev.addEventListener(‘click’, () => moveTo(state.cookIndex - 1));
+let startX = null, startY = null;
+track.addEventListener(‘touchstart’, (e) => { startX = e.touches[0].clientX; startY = e.touches[0].clientY; }, {passive:true});
+track.addEventListener(‘touchend’, (e) => {
+if (startX === null) return;
+const dx = e.changedTouches[0].clientX - startX, dy = e.changedTouches[0].clientY - startY;
+if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)*1.5) { if (dx < 0) next.click(); else prev.click(); }
+startX = null; startY = null;
+}, {passive:true});
+attachTimerHandlers();
+}
+function attachRecipeHandlers() {
+attachTimerHandlers();
+const bar = document.getElementById(‘backBar’);
+if (bar) {
+const onScroll = () => { if (window.scrollY > 10) bar.classList.add(‘scrolled’); else bar.classList.remove(‘scrolled’); };
+window.addEventListener(‘scroll’, onScroll, { passive: true });
+onScroll();
+}
+}
+function attachTimerHandlers() {
+document.querySelectorAll(’.timer-slot’).forEach(slot => {
+const btn = slot.querySelector(’[data-timer-start]’);
+if (!btn || btn.dataset._bound) return;
+btn.dataset._bound = ‘1’;
+btn.addEventListener(‘click’, () => startTimer(slot));
+});
+}
+function startTimer(slot) {
+const key = slot.dataset.key, type = slot.dataset.type;
+let minutes = parseFloat(slot.dataset.minutes) || 1;
+slot.innerHTML = `<div class="timer-active" data-key="${escapeAttr(key)}">${type === 'adjustable' ? `<div class="adj-row"><input type="number" min="0.1" step="0.1" value="${minutes}" id="t_input_${hash(key)}"><button class="save-btn" data-save>Сохранить</button></div>` : ''}<div class="display" id="t_disp_${hash(key)}">${formatMMSS(minutes*60)}</div><div class="controls"><button data-toggle>⏸ Пауза</button><button data-reset>⟲ Сброс</button></div></div>`;
+const tstate = { remain: minutes * 60, total: minutes * 60, running: true, interval: null };
+const disp = document.getElementById(`t_disp_${hash(key)}`);
+const active = slot.querySelector(’.timer-active’);
+const tick = () => {
+if (!tstate.running) return;
+tstate.remain -= 1;
+if (tstate.remain <= 0) {
+tstate.remain = 0; tstate.running = false;
+clearInterval(tstate.interval);
+disp.textContent = ‘00:00’; disp.style.color = ‘var(–accent)’;
+try { beep(); } catch {}
+if (navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 200]);
+return;
+}
+disp.textContent = formatMMSS(tstate.remain);
+};
+tstate.interval = setInterval(tick, 1000);
+active.querySelector(’[data-toggle]’).addEventListener(‘click’, () => {
+tstate.running = !tstate.running;
+active.classList.toggle(‘paused’, !tstate.running);
+active.querySelector(’[data-toggle]’).textContent = tstate.running ? ‘⏸ Пауза’ : ‘▶ Продолж.’;
+});
+active.querySelector(’[data-reset]’).addEventListener(‘click’, () => {
+clearInterval(tstate.interval);
+tstate.running = false; tstate.remain = tstate.total;
+disp.textContent = formatMMSS(tstate.total); disp.style.color = ‘’;
+active.classList.remove(‘paused’);
+active.querySelector(’[data-toggle]’).textContent = ‘▶ Старт’;
+active.querySelector(’[data-toggle]’).addEventListener(‘click’, function once() {
+tstate.running = true;
+active.classList.remove(‘paused’);
+active.querySelector(’[data-toggle]’).textContent = ‘⏸ Пауза’;
+tstate.interval = setInterval(tick, 1000);
+}, { once: true });
+});
+const save = active.querySelector(’[data-save]’);
+if (save) save.addEventListener(‘click’, () => {
+const input = active.querySelector(‘input[type=“number”]’);
+const v = parseFloat(input.value);
+if (v > 0 && v < 1440) {
+localStorage.setItem(`tm_${key}`, String(v));
+clearInterval(tstate.interval);
+tstate.total = v * 60; tstate.remain = v * 60; tstate.running = true;
+disp.textContent = formatMMSS(tstate.remain); disp.style.color = ‘’;
+active.classList.remove(‘paused’);
+tstate.interval = setInterval(tick, 1000);
+}
+});
+}
+function beep() {
+const ctx = new (window.AudioContext || window.webkitAudioContext)();
+const o = ctx.createOscillator(), g = ctx.createGain();
+o.connect(g); g.connect(ctx.destination);
+o.frequency.value = 880; o.type = ‘sine’;
+g.gain.setValueAtTime(0.2, ctx.currentTime);
+g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+o.start(); o.stop(ctx.currentTime + 0.5);
+}
+function loadingHTML() { return `<div class="loading"><div class="spin"></div><div>Загрузка...</div></div>`; }
+function escapeHTML(s) { if (s == null) return ‘’; return String(s).replace(/[&<>”’]/g, c => ({’&’:’&’,’<’:’<’,’>’:’>’,’”’:’"’,”’”:’'’}[c])); }
+function escapeAttr(s) { return escapeHTML(s).replace(/”/g, ‘"’); }
+function formatMin(m) { if (m < 1) return (m*60).toFixed(0)+’ сек’; return Number.isInteger(m) ? `${m}` : m.toFixed(1); }
+function formatMMSS(sec) { sec = Math.max(0, Math.floor(sec)); const m = Math.floor(sec / 60), s = sec % 60; return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`; }
+function hash(s) { let h = 0; for (let i = 0; i < s.length; i++) h = ((h<<5)-h) + s.charCodeAt(i) | 0; return Math.abs(h).toString(36); }
+function plural(n, one, few, many) { const mod10 = n % 10, mod100 = n % 100; if (mod10 === 1 && mod100 !== 11) return one; if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) return few; return many; }
+function totalServings(d) { return (d.servings.adult || 0) + (d.servings.kid || 0); }
+function difficultyLabel(d) { return { easy: ‘легко’, medium: ‘средне’, hard: ‘сложно’ }[d || ‘easy’]; }
+function tagLabel(t) { const map = { quick: ‘⚡ быстро’, make_ahead: ‘📅 заранее’, freezer_friendly: ‘❄ заморозка’, one_pot: ‘🍲 одна посуда’, no_cook: ‘🌿 без готовки’, high_protein: ‘💪 белок’, kid_approved: ‘👶 для детей’, batch_cooking: ‘📦 партия’ }; return map[t] || t; }
+function sourceUrl(key) { return ‘https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart’; }
+boot();
+if (‘serviceWorker’ in navigator) window.addEventListener(‘load’, () => { navigator.serviceWorker.register(’/sw.js’).catch(err => console.warn(‘SW:’, err)); });
+</script>
 
-  // ─── ROUTING ─────────────────────────────────────────────────────
-  function parseHash() {
-    const h = location.hash.replace(/^#/, '');
-    if (!h) return { view: 'list' };
-    const params = new URLSearchParams(h);
-    const id = params.get('r');
-    if (id) {
-      if (params.has('cook')) return { view: 'cook', id };
-      return { view: 'recipe', id };
-    }
-    return { view: 'list' };
-  }
-
-  function navigate(hash) {
-    if (location.hash === hash) { render(); return; }
-    location.hash = hash;
-  }
-
-  window.addEventListener('hashchange', boot);
-
-  // ─── API ─────────────────────────────────────────────────────────
-  async function fetchJSON(url) {
-    const r = await fetch(url);
-    if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    return r.json();
-  }
-
-  async function loadRecipes() {
-    if (state.recipes.length > 0) return;
-    const res = await fetchJSON('/api/recipes');
-    state.recipes = res.recipes || [];
-    state.availableFilters = res.filters || state.availableFilters;
-  }
-
-  async function loadRecipe(id) {
-    state.recipeError = null;
-    state.recipeData = null;
-    state.recipeLegacy = null;
-    const res = await fetchJSON(`/api/page?id=${encodeURIComponent(id)}`);
-    state.recipeMeta = { last_edited: res.last_edited, created_at: res.created_at };
-    if (res.error) {
-      state.recipeError = res;
-      return;
-    }
-    if (res.format === 'v1') {
-      state.recipeData = res.data;
-      state.recipeWarnings = res.warnings || [];
-    } else if (res.format === 'v0') {
-      state.recipeLegacy = res.blocks || [];
-    }
-  }
-
-  // ─── BOOT ────────────────────────────────────────────────────────
-  async function boot() {
-    const route = parseHash();
-    state.view = route.view;
-    state.recipeId = route.id || null;
-
-    if (state.view === 'list') {
-      render();
-      try { await loadRecipes(); render(); }
-      catch (e) { renderError(e.message); }
-      return;
-    }
-    if (state.view === 'recipe' || state.view === 'cook') {
-      if (!state.recipeData && !state.recipeLegacy || state.recipeId !== state._lastLoadedId) {
-        state.view = 'loading';
-        render();
-        try {
-          await loadRecipe(state.recipeId);
-          state._lastLoadedId = state.recipeId;
-        } catch (e) {
-          state.recipeError = { error: 'fetch_failed', message: e.message };
-        }
-      }
-      // Подготовка слайдов для cook mode
-      if (state.recipeData) prepareCookSlides();
-      state.view = route.view;
-      render();
-    }
-  }
-
-  function prepareCookSlides() {
-    const slides = [];
-    for (const sec of state.recipeData.sections) {
-      if (sec.type !== 'linear') continue;
-      const steps = sec.steps || [];
-      for (let i = 0; i < steps.length; i++) {
-        slides.push({ sectionName: sec.name, stepIndex: i + 1, step: steps[i] });
-      }
-    }
-    state.cookSlides = slides;
-    state.cookIndex = 0;
-  }
-
-  // ─── RENDER DISPATCH ─────────────────────────────────────────────
-  function render() {
-    const app = document.getElementById('app');
-    if (state.view === 'loading') app.innerHTML = loadingHTML();
-    else if (state.view === 'list') app.innerHTML = listHTML();
-    else if (state.view === 'recipe') { app.innerHTML = recipeHTML(); attachRecipeHandlers(); }
-    else if (state.view === 'cook') { app.innerHTML = cookHTML(); attachCookHandlers(); }
-    window.scrollTo(0, 0);
-  }
-
-  function renderError(msg) {
-    document.getElementById('app').innerHTML = `<div class="error"><div>Не удалось загрузить рецепты</div><code>${escapeHTML(msg)}</code></div>`;
-  }
-
-  // ─── LIST VIEW ───────────────────────────────────────────────────
-  function listHTML() {
-    const all = state.recipes;
-    const filtered = applyFilters(all);
-    const f = state.filters;
-
-    // Фильтр-чипы: категория
-    const catChips = [
-      chip('Все', !f.category, 'cat:null'),
-      ...state.availableFilters.categories.map(c =>
-        chip(c, f.category === c, `cat:${encodeURIComponent(c)}`, countFor(all, r => r.category === c))
-      )
-    ].join('');
-
-    // Для кого
-    const whomChips = state.availableFilters.for_whom.map(w =>
-      chip(w, f.for_whom.has(w), `whom:${encodeURIComponent(w)}`, countFor(all, r => (r.for_whom||[]).includes(w)))
-    ).join('');
-
-    const body = filtered.length === 0
-      ? `<div class="empty"><div class="empty-icon">🍽️</div>По этим фильтрам рецептов нет</div>`
-      : `<div class="list">${filtered.map(listItemHTML).join('')}</div>`;
-
-    return `
-      <div class="header">
-        <div class="title">Рецепты</div>
-      </div>
-      <div class="filter-bar">${catChips}</div>
-      ${whomChips ? `<div class="filter-bar">${whomChips}</div>` : ''}
-      <div style="font-size:13px;color:var(--ink-soft);padding:4px 0 12px;">
-        ${filtered.length} из ${all.length}
-      </div>
-      ${body}
-    `;
-  }
-
-  function listItemHTML(r) {
-    const meta = [
-      r.category,
-      r.time_text || null,
-      (r.for_whom || []).join(' · ')
-    ].filter(Boolean);
-    const metaHTML = meta.map((m,i) => i === 0 ? escapeHTML(m) : `<span class="dot">·</span>${escapeHTML(m)}`).join(' ');
-    return `
-      <a class="list-item ${r.tested ? '' : 'untested'}" href="#r=${r.id}" onclick="event.stopPropagation()">
-        <div class="emoji">${r.icon || '🍽️'}</div>
-        <div class="main">
-          <div class="name">${escapeHTML(r.title)}</div>
-          <div class="meta">${metaHTML}</div>
-        </div>
-      </a>
-    `;
-  }
-
-  function applyFilters(recipes) {
-    const f = state.filters;
-    return recipes.filter(r => {
-      if (f.category && r.category !== f.category) return false;
-      if (f.for_whom.size > 0) {
-        const anyMatch = (r.for_whom || []).some(w => f.for_whom.has(w));
-        if (!anyMatch) return false;
-      }
-      return true;
-    });
-  }
-
-  function countFor(recipes, pred) {
-    return recipes.filter(pred).length;
-  }
-
-  function chip(label, active, action, count) {
-    const cntHTML = (typeof count === 'number' && count > 0 && !active) ? `<span class="count">${count}</span>` : '';
-    return `<button class="chip ${active?'active':''}" data-action="${action}">${escapeHTML(label)}${cntHTML}</button>`;
-  }
-
-  // Делегирование кликов по чипам
-  document.addEventListener('click', (e) => {
-    const c = e.target.closest('.chip[data-action]');
-    if (!c) return;
-    const [kind, value] = c.dataset.action.split(':');
-    const v = value && value !== 'null' ? decodeURIComponent(value) : null;
-    if (kind === 'cat') {
-      state.filters.category = (state.filters.category === v) ? null : v;
-    } else if (kind === 'whom') {
-      const s = state.filters.for_whom;
-      if (s.has(v)) s.delete(v); else s.add(v);
-    }
-    render();
-  });
-
-  // ─── RECIPE DETAIL ───────────────────────────────────────────────
-  function recipeHTML() {
-    if (state.recipeError) return errorHTML(state.recipeError);
-    if (state.recipeData) return recipeV1HTML(state.recipeData, state.recipeWarnings || []);
-    if (state.recipeLegacy) return recipeV0HTML(state.recipeLegacy);
-    return loadingHTML();
-  }
-
-  function errorHTML(err) {
-    return `
-      <div class="back-bar"><a class="back-btn" href="#">← Назад</a></div>
-      <div class="error">
-        <div style="font-size:20px;font-family:var(--serif);margin-bottom:8px;">Рецепт не отобразился</div>
-        <div style="color:var(--ink-soft);font-size:14px;">${escapeHTML(err.message || err.error || 'неизвестная ошибка')}</div>
-        ${err.details ? `<code>${err.details.map(d => escapeHTML(d.path + ': ' + d.message)).join('\n')}</code>` : ''}
-        ${err.raw_snippet ? `<code>${escapeHTML(err.raw_snippet)}</code>` : ''}
-      </div>
-    `;
-  }
-
-  function recipeV1HTML(d, warnings) {
-    const forKids = (d.for_whom || []).some(w => w === 'Дети 12+ мес.' || w === 'Вся семья');
-
-    const classification = [
-      d.category ? `<span class="tag category">${escapeHTML(d.category)}</span>` : '',
-      ...(d.for_whom || []).map(w => `<span class="tag ${w === 'Дети 12+ мес.' ? 'for-kids' : ''}">${escapeHTML(w)}</span>`),
-      ...(d.tags || []).slice(0, 4).map(t => `<span class="tag">${escapeHTML(tagLabel(t))}</span>`)
-    ].filter(Boolean).join('');
-
-    const quickFacts = `
-      <div class="quick-facts">
-        <div class="fact"><div class="val">${d.time_min}</div><div class="unit">мин</div></div>
-        ${d.active_time_min && d.active_time_min !== d.time_min ? `<div class="fact"><div class="val">${d.active_time_min}</div><div class="unit">актив.</div></div>` : `<div class="fact"><div class="val">${totalServings(d)}</div><div class="unit">порц.</div></div>`}
-        <div class="fact"><div class="val">${d.kbju.kcal}</div><div class="unit">ккал</div></div>
-        <div class="fact"><div class="val">${difficultyLabel(d.difficulty)}</div><div class="unit">сложн.</div></div>
-      </div>
-    `;
-
-    const kbju = `
-      <div class="kbju-row">
-        <div class="kv"><b>${d.kbju.kcal}</b><span>ккал</span></div>
-        <div class="kv"><b>${d.kbju.protein_g}</b><span>белок</span></div>
-        <div class="kv"><b>${d.kbju.fat_g}</b><span>жиры</span></div>
-        <div class="kv"><b>${d.kbju.carbs_g}</b><span>углев.</span></div>
-        <div class="kv"><b>${d.kbju.portion_g}</b><span>г/порц.</span></div>
-      </div>
-      ${d.kbju_kid ? `
-        <div class="kbju-row" style="background:rgba(232,109,63,.08);">
-          <div class="kv" style="font-size:11px;"><b style="font-size:12px;">ДЕТСКАЯ</b></div>
-          <div class="kv"><b>${d.kbju_kid.kcal}</b><span>ккал</span></div>
-          <div class="kv"><b>${d.kbju_kid.protein_g}</b><span>белок</span></div>
-          <div class="kv"><b>${d.kbju_kid.fat_g}</b><span>жиры</span></div>
-          <div class="kv"><b>${d.kbju_kid.carbs_g}</b><span>углев.</span></div>
-          <div class="kv"><b>${d.kbju_kid.portion_g}</b><span>г/порц.</span></div>
-        </div>
-      ` : ''}
-    `;
-
-    const hasLinearSteps = (d.sections || []).some(s => s.type === 'linear' && (s.steps || []).length > 0);
-    const cookBtn = hasLinearSteps ? `<button class="cook-btn" onclick="navigate('#r=${state.recipeId}&cook')">▶ Готовим сейчас</button>` : '';
-
-    const sectionsHTML = (d.sections || []).map(renderSection).join('');
-    const single = d.sections.length === 1;
-
-    const warningsHTML = warnings.length > 0 ? `
-      <details class="warnings">
-        <summary>⚠ ${warnings.length} ${plural(warnings.length, 'предупреждение', 'предупреждения', 'предупреждений')} валидатора</summary>
-        <ul>${warnings.map(w => `<li>${escapeHTML(w.message)}</li>`).join('')}</ul>
-      </details>
-    ` : '';
-
-    return `
-      <div class="back-bar" id="backBar"><a class="back-btn" href="#">← Назад</a></div>
-      <div class="recipe-header">
-        ${d.icon ? `<div class="emoji">${d.icon}</div>` : ''}
-        <div class="title">${escapeHTML(d.title)}</div>
-        ${d.source_note ? `<div class="source-note">${escapeHTML(d.source_note)}</div>` : ''}
-      </div>
-      ${classification ? `<div class="classification">${classification}</div>` : ''}
-      ${warningsHTML}
-      ${quickFacts}
-      ${kbju}
-      ${d.yield_note ? `<div style="text-align:center;font-size:13px;color:var(--ink-soft);margin-bottom:20px;">${escapeHTML(d.yield_note)}</div>` : ''}
-      ${cookBtn}
-
-      ${sectionsHTML}
-
-      ${d.params ? renderParams(d.params) : ''}
-      ${d.equipment && d.equipment.length ? renderEquipment(d.equipment) : ''}
-      ${d.alternatives && d.alternatives.length ? renderAlternatives(d.alternatives) : ''}
-      ${d.substitutions && d.substitutions.length ? renderSubstitutions(d.substitutions) : ''}
-      ${d.prep_ahead ? renderPrepAhead(d.prep_ahead) : ''}
-      ${d.serving ? renderServing(d.serving) : ''}
-      ${d.mistakes && d.mistakes.length ? renderMistakes(d.mistakes) : ''}
-      ${d.tips && d.tips.length ? renderTips(d.tips) : ''}
-      ${d.storage ? renderStorage(d.storage) : ''}
-      ${d.video_url ? `<div class="section"><h4>Видео</h4><a href="${escapeHTML(d.video_url)}" target="_blank" rel="noopener">${escapeHTML(d.video_url)}</a></div>` : ''}
-      ${d.sources && d.sources.length ? renderSources(d.sources) : ''}
-    `;
-  }
-
-  function renderSection(sec, _, all) {
-    const single = state.recipeData.sections.length === 1;
-    const title = (!single) ? `<div class="section-title">${escapeHTML(sec.name)}</div>` : '';
-    const note = sec.note ? `<div class="section-note">${escapeHTML(sec.note)}</div>` : '';
-
-    if (sec.type === 'ingredient_group') {
-      const items = (sec.ingredients || []).map(renderIngredient).join('');
-      return `
-        <div class="section">
-          ${title}
-          ${note}
-          <div class="ingredients">${items}</div>
-        </div>
-      `;
-    }
-
-    // linear
-    const ings = (sec.ingredients || []).length > 0
-      ? `<h4 style="margin-bottom:8px;">Ингредиенты</h4><div class="ingredients" style="margin-bottom:16px;">${sec.ingredients.map(renderIngredient).join('')}</div>`
-      : '';
-    const steps = (sec.steps || []).length > 0
-      ? `<h4 style="margin-bottom:8px;">Приготовление</h4><div class="steps">${sec.steps.map((s, i) => renderStep(s, i+1, sec.name)).join('')}</div>`
-      : '';
-
-    return `
-      <div class="section">
-        ${title}
-        ${note}
-        ${ings}
-        ${steps}
-      </div>
-    `;
-  }
-
-  function renderIngredient(ing) {
-    return `
-      <div class="ingredient ${ing.critical ? 'critical' : ''}">
-        <div class="name">${escapeHTML(ing.name)}</div>
-        <div class="amount">${escapeHTML(ing.amount_text)}</div>
-      </div>
-    `;
-  }
-
-  function renderStep(step, n, sectionName) {
-    const key = `${state.recipeId}::${sectionName}::${n}`;
-    const timerHTML = step.timer_min ? renderTimerBtn(step, key) : '';
-    return `
-      <div class="step">
-        <div class="step-num">${n}</div>
-        <div class="step-body">
-          <div class="step-text">${escapeHTML(step.text)}</div>
-          ${timerHTML}
-        </div>
-      </div>
-    `;
-  }
-
-  function renderTimerBtn(step, key) {
-    const saved = typeof localStorage !== 'undefined' ? localStorage.getItem(`tm_${key}`) : null;
-    const minutes = saved ? parseFloat(saved) : step.timer_min;
-    const rangeText = step.timer_range ? `${step.timer_range[0]}–${step.timer_range[1]}` : formatMin(minutes);
-    return `
-      <div class="timer-slot" data-key="${escapeAttr(key)}" data-minutes="${minutes}" data-type="${step.timer_type}" data-range='${JSON.stringify(step.timer_range||null)}'>
-        <button class="timer-btn ${step.timer_type}" data-timer-start>
-          <span class="icon">⏱</span>
-          <span>${rangeText} мин</span>
-        </button>
-      </div>
-    `;
-  }
-
-  function renderParams(p) {
-    const rows = [
-      kv('Техника', p.device),
-      p.mode && kv('Режим', p.mode),
-      p.level && kv('Уровень', p.level),
-      p.temp_c != null && kv('Температура', `${p.temp_c}°C`),
-      kv('Время', p.time_text),
-      p.output && kv('Выход', p.output),
-    ].filter(Boolean).join('');
-
-    const tempRow = p.internal_temp ? `
-      <div class="param-row internal-temp">
-        <div class="k">🌡 Внутри</div>
-        <div class="v">${p.internal_temp.value_c}°C</div>
-      </div>
-      <div class="internal-temp-note">
-        ${escapeHTML(p.internal_temp.note)}
-        ${p.internal_temp.source ? `<br><a href="${sourceUrl(p.internal_temp.source)}" target="_blank" rel="noopener">Источник ↗</a>` : ''}
-      </div>
-    ` : '';
-
-    return `
-      <div class="section">
-        <h4>Параметры</h4>
-        <div class="params">
-          ${rows}
-          ${tempRow}
-          <div class="param-row"><div class="k">Готовность</div><div class="v" style="font-weight:500;font-size:13px;">${escapeHTML(p.readiness)}</div></div>
-        </div>
-      </div>
-    `;
-  }
-
-  function kv(k, v) {
-    return `<div class="param-row"><div class="k">${escapeHTML(k)}</div><div class="v">${escapeHTML(v)}</div></div>`;
-  }
-
-  function renderEquipment(list) {
-    return `
-      <div class="section">
-        <h4>Инвентарь</h4>
-        <div class="equipment">
-          ${list.map(e => `<span class="item">${escapeHTML(e)}</span>`).join('')}
-        </div>
-      </div>
-    `;
-  }
-
-  function renderAlternatives(list) {
-    return `
-      <div class="section">
-        <h4>Альтернативная техника</h4>
-        <div class="params">
-          ${list.map(a => `
-            <div class="alt-row">
-              <div class="dev">${escapeHTML(a.device)}</div>
-              ${a.mode ? `<div class="mode">${escapeHTML(a.mode)}</div>` : ''}
-              <div class="time">${escapeHTML(a.time_text)}</div>
-              ${a.note ? `<div class="note">${escapeHTML(a.note)}</div>` : ''}
-            </div>
-          `).join('')}
-        </div>
-      </div>
-    `;
-  }
-
-  function renderSubstitutions(list) {
-    return `
-      <div class="section">
-        <h4>Замены</h4>
-        <div class="sub-table">
-          ${list.map(s => `
-            <div class="sub-row">
-              <div class="orig">${escapeHTML(s.original)}</div>
-              <div class="alts">→ ${s.alternatives.map(escapeHTML).join(' · ')}</div>
-              ${s.note ? `<div class="note">${escapeHTML(s.note)}</div>` : ''}
-            </div>
-          `).join('')}
-        </div>
-      </div>
-    `;
-  }
-
-  function renderPrepAhead(text) {
-    return `
-      <div class="section">
-        <h4>Заранее / в день</h4>
-        <div class="prep-ahead">${escapeHTML(text)}</div>
-      </div>
-    `;
-  }
-
-  function renderServing(s) {
-    return `
-      <div class="section">
-        <h4>Подача</h4>
-        <div class="serving-info">
-          ${s.temp_c != null ? `<div class="kv"><b>Температура</b><div>${s.temp_c}°C</div></div>` : ''}
-          ${s.pairs_with ? `<div class="kv"><b>Сочетается</b><div>${escapeHTML(s.pairs_with)}</div></div>` : ''}
-          ${s.size_note ? `<div class="kv"><b>Порция</b><div>${escapeHTML(s.size_note)}</div></div>` : ''}
-        </div>
-      </div>
-    `;
-  }
-
-  function renderMistakes(list) {
-    return `
-      <div class="section">
-        <h4>Частые ошибки</h4>
-        <div class="callout warning">
-          <div class="callout-head">⚠ Если что-то пошло не так</div>
-          ${list.map(m => `
-            <div class="mistake">
-              <b>${escapeHTML(m.symptom)}</b><br>
-              <em>Причина: ${escapeHTML(m.cause)}</em>
-              <div style="margin-top:4px;">→ ${escapeHTML(m.fix)}</div>
-            </div>
-          `).join('')}
-        </div>
-      </div>
-    `;
-  }
-
-  function renderTips(list) {
-    return `
-      <div class="section">
-        <h4>Советы</h4>
-        <div class="callout tip">
-          <div class="callout-head">💡 Полезно знать</div>
-          <ul class="plain">
-            ${list.map(t => `<li>${escapeHTML(t)}</li>`).join('')}
-          </ul>
-        </div>
-      </div>
-    `;
-  }
-
-  function renderStorage(s) {
-    const items = [];
-    if (s.fridge_days != null) items.push(`Холодильник: <b>${s.fridge_days} ${plural(s.fridge_days, 'день', 'дня', 'дней')}</b>`);
-    if (s.freezer_months != null) items.push(`Морозилка: <b>${s.freezer_months} ${plural(s.freezer_months, 'месяц', 'месяца', 'месяцев')}</b>`);
-    if (s.reheat) items.push(`Разогрев: ${escapeHTML(s.reheat)}`);
-    return `
-      <div class="section">
-        <h4>Хранение</h4>
-        <div class="callout info">
-          <div class="callout-head">ℹ Свежесть</div>
-          <ul class="plain">${items.map(i => `<li>${i}</li>`).join('')}</ul>
-        </div>
-      </div>
-    `;
-  }
-
-  function renderSources(list) {
-    return `
-      <div class="section">
-        <h4>Источники</h4>
-        <div class="sources">
-          ${list.map(s => `
-            <div class="src">
-              ${s.type ? `<span class="type">${escapeHTML(s.type)}</span>` : ''}
-              <a href="${escapeHTML(s.url)}" target="_blank" rel="noopener">${escapeHTML(s.label)} ↗</a>
-            </div>
-          `).join('')}
-        </div>
-      </div>
-    `;
-  }
-
-  // ─── LEGACY v0 (fallback) ─────────────────────────────────────────
-  function recipeV0HTML(blocks) {
-    const sections = parseV0Blocks(blocks);
-    const html = sections.map(renderV0Section).join('');
-    return `
-      <div class="back-bar"><a class="back-btn" href="#">← Назад</a></div>
-      <div class="legacy-notice">⚠ Этот рецепт ещё в старом формате. Будет мигрирован в новую схему.</div>
-      <div style="padding: 0 4px;">${html}</div>
-    `;
-  }
-
-  function parseV0Blocks(blocks) {
-    const sections = [];
-    let current = { title: null, ing: [], steps: [], params: [], notes: [], mode: null };
-    const push = () => { if (current.ing.length || current.steps.length || current.params.length || current.notes.length || current.title) sections.push(current); };
-    for (const b of blocks) {
-      const t = b.type;
-      if (t === 'heading_2' || t === 'heading_3') {
-        push();
-        const name = extractV0Text(b[t]?.rich_text || []);
-        const lower = name.toLowerCase();
-        const hidden = ['ингредиенты','состав','приготовление','шаги','порядок','параметры'].some(k => lower.includes(k));
-        const mode = lower.includes('ингред') || lower.includes('состав') ? 'ing'
-          : lower.includes('приготовл') || lower.includes('шаг') ? 'steps'
-          : lower.includes('параметр') ? 'params' : null;
-        current = { title: hidden ? null : name, ing: [], steps: [], params: [], notes: [], mode };
-      } else if (t === 'table' && b._children) {
-        for (let i = 0; i < b._children.length; i++) {
-          const row = b._children[i];
-          if (b.table?.has_column_header && i === 0) continue;
-          const cells = (row.table_row?.cells || []).map(c => extractV0Text(c));
-          if (current.mode === 'params') current.params.push([cells[0] || '', cells.slice(1).join(' — ')]);
-          else current.ing.push([cells[0] || '', cells.slice(1).join(' — ')]);
-        }
-      } else if (t === 'numbered_list_item') {
-        current.steps.push(extractV0Text(b.numbered_list_item?.rich_text || []));
-      } else if (t === 'bulleted_list_item') {
-        const txt = extractV0Text(b.bulleted_list_item?.rich_text || []);
-        if (current.mode === 'ing') current.ing.push(['', txt]);
-        else current.notes.push(txt);
-      } else if (t === 'callout') {
-        current.notes.push(extractV0Text(b.callout?.rich_text || []));
-      } else if (t === 'paragraph') {
-        const txt = extractV0Text(b.paragraph?.rich_text || []);
-        if (!txt.trim()) continue;
-        if (current.mode === null && current.title === null) current.notes.push(txt);
-        else current.notes.push(txt);
-      }
-    }
-    push();
-    return sections;
-  }
-
-  function extractV0Text(richText) {
-    return (richText || []).map(r => r.plain_text || '').join('');
-  }
-
-  function renderV0Section(sec) {
-    const title = sec.title ? `<h3 style="margin-bottom:10px;margin-top:16px;">${escapeHTML(sec.title)}</h3>` : '';
-    const ing = sec.ing.length ? `<div class="ingredients" style="margin-bottom:12px;">${sec.ing.map(([n,a]) => `<div class="ingredient"><div class="name">${escapeHTML(n)}</div><div class="amount">${escapeHTML(a)}</div></div>`).join('')}</div>` : '';
-    const steps = sec.steps.length ? `<ol style="padding-left:20px;margin-bottom:12px;line-height:1.55;">${sec.steps.map(s => `<li style="margin-bottom:8px;">${escapeHTML(s)}</li>`).join('')}</ol>` : '';
-    const params = sec.params.length ? `<div class="params" style="margin-bottom:12px;">${sec.params.map(([k,v]) => `<div class="param-row"><div class="k">${escapeHTML(k)}</div><div class="v">${escapeHTML(v)}</div></div>`).join('')}</div>` : '';
-    const notes = sec.notes.length ? `<div style="margin-bottom:12px;">${sec.notes.map(n => `<div style="padding:8px 0;color:var(--ink-soft);font-size:14px;">${escapeHTML(n)}</div>`).join('')}</div>` : '';
-    return `<div>${title}${ing}${steps}${params}${notes}</div>`;
-  }
-
-  // ─── COOK MODE ───────────────────────────────────────────────────
-  function cookHTML() {
-    const d = state.recipeData;
-    if (!d || state.cookSlides.length === 0) {
-      return `<div class="cook-overlay"><div class="cook-head"><button class="close" onclick="navigate('#r=${state.recipeId}')">✕</button><div class="title">Готовим</div></div><div class="error" style="padding:60px 20px;">Нет шагов для режима готовки</div></div>`;
-    }
-    const total = state.cookSlides.length;
-    const curIdx = state.cookIndex;
-    const slides = state.cookSlides.map((s, i) => `
-      <div class="cook-slide" data-idx="${i}">
-        <div class="section-name">${d.sections.length > 1 ? escapeHTML(s.sectionName) : `Шаг ${s.stepIndex} из ${(d.sections.find(sec => sec.name === s.sectionName)?.steps||[]).length}`}</div>
-        <div class="step-num">Шаг ${i+1} / ${total}</div>
-        <div class="step-text">${escapeHTML(s.step.text)}</div>
-        ${s.step.timer_min ? `<div class="timer-area">${renderTimerBtn(s.step, `cook::${state.recipeId}::${i}`)}</div>` : ''}
-      </div>
-    `).join('');
-
-    return `
-      <div class="cook-overlay">
-        <div class="cook-head">
-          <button class="close" onclick="navigate('#r=${state.recipeId}')">✕</button>
-          <div class="title">${escapeHTML(d.title)}</div>
-          <div class="progress">${curIdx+1}/${total}</div>
-        </div>
-        <div class="cook-track" id="cookTrack">
-          <div class="cook-slides" id="cookSlides" style="transform:translateX(-${curIdx*100}%);">
-            ${slides}
-          </div>
-        </div>
-        <div class="cook-nav">
-          <button id="cookPrev" ${curIdx === 0 ? 'disabled' : ''}>← Назад</button>
-          <button id="cookNext" class="${curIdx === total-1 ? '' : 'primary'}">${curIdx === total-1 ? 'Готово ✓' : 'Далее →'}</button>
-        </div>
-      </div>
-    `;
-  }
-
-  function attachCookHandlers() {
-    const next = document.getElementById('cookNext');
-    const prev = document.getElementById('cookPrev');
-    const track = document.getElementById('cookTrack');
-    const slides = document.getElementById('cookSlides');
-    if (!next || !prev || !track || !slides) return;
-
-    const total = state.cookSlides.length;
-    const moveTo = (idx) => {
-      state.cookIndex = Math.max(0, Math.min(total-1, idx));
-      slides.style.transform = `translateX(-${state.cookIndex*100}%)`;
-      // обновляем верх и низ
-      document.querySelector('.cook-head .progress').textContent = `${state.cookIndex+1}/${total}`;
-      prev.disabled = state.cookIndex === 0;
-      if (state.cookIndex === total-1) {
-        next.textContent = 'Готово ✓';
-        next.classList.remove('primary');
-      } else {
-        next.textContent = 'Далее →';
-        next.classList.add('primary');
-      }
-    };
-
-    next.addEventListener('click', () => {
-      if (state.cookIndex === total-1) navigate(`#r=${state.recipeId}`);
-      else moveTo(state.cookIndex + 1);
-    });
-    prev.addEventListener('click', () => moveTo(state.cookIndex - 1));
-
-    // Swipe
-    let startX = null, startY = null;
-    track.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; startY = e.touches[0].clientY; }, {passive:true});
-    track.addEventListener('touchend', (e) => {
-      if (startX === null) return;
-      const dx = e.changedTouches[0].clientX - startX;
-      const dy = e.changedTouches[0].clientY - startY;
-      if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)*1.5) {
-        if (dx < 0) next.click(); else prev.click();
-      }
-      startX = null; startY = null;
-    }, {passive:true});
-
-    attachTimerHandlers();
-  }
-
-  // ─── RECIPE HANDLERS ─────────────────────────────────────────────
-  function attachRecipeHandlers() {
-    attachTimerHandlers();
-
-    // scroll watcher для back-bar
-    const bar = document.getElementById('backBar');
-    if (bar) {
-      const onScroll = () => {
-        if (window.scrollY > 10) bar.classList.add('scrolled');
-        else bar.classList.remove('scrolled');
-      };
-      window.addEventListener('scroll', onScroll, { passive: true });
-      onScroll();
-    }
-  }
-
-  // ─── TIMERS ──────────────────────────────────────────────────────
-  function attachTimerHandlers() {
-    document.querySelectorAll('.timer-slot').forEach(slot => {
-      const btn = slot.querySelector('[data-timer-start]');
-      if (!btn || btn.dataset._bound) return;
-      btn.dataset._bound = '1';
-      btn.addEventListener('click', () => startTimer(slot));
-    });
-  }
-
-  function startTimer(slot) {
-    const key = slot.dataset.key;
-    const type = slot.dataset.type;
-    let minutes = parseFloat(slot.dataset.minutes) || 1;
-    const range = JSON.parse(slot.dataset.range || 'null');
-
-    // UI — заменяем кнопку на активный таймер
-    slot.innerHTML = `
-      <div class="timer-active" data-key="${escapeAttr(key)}">
-        ${type === 'adjustable' ? `
-          <div class="adj-row">
-            <input type="number" min="0.1" step="0.1" value="${minutes}" id="t_input_${hash(key)}">
-            <button class="save-btn" data-save>Сохранить</button>
-          </div>
-        ` : ''}
-        <div class="display" id="t_disp_${hash(key)}">${formatMMSS(minutes*60)}</div>
-        <div class="controls">
-          <button data-toggle>⏸ Пауза</button>
-          <button data-reset>⟲ Сброс</button>
-        </div>
-      </div>
-    `;
-
-    const state = { remain: minutes * 60, total: minutes * 60, running: true, interval: null };
-    const disp = document.getElementById(`t_disp_${hash(key)}`);
-    const active = slot.querySelector('.timer-active');
-
-    const tick = () => {
-      if (!state.running) return;
-      state.remain -= 1;
-      if (state.remain <= 0) {
-        state.remain = 0;
-        state.running = false;
-        clearInterval(state.interval);
-        disp.textContent = '00:00';
-        disp.style.color = 'var(--accent)';
-        // beep
-        try { beep(); } catch {}
-        // Vibrate
-        if (navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 200]);
-        return;
-      }
-      disp.textContent = formatMMSS(state.remain);
-    };
-    state.interval = setInterval(tick, 1000);
-
-    active.querySelector('[data-toggle]').addEventListener('click', () => {
-      state.running = !state.running;
-      active.classList.toggle('paused', !state.running);
-      active.querySelector('[data-toggle]').textContent = state.running ? '⏸ Пауза' : '▶ Продолж.';
-    });
-    active.querySelector('[data-reset]').addEventListener('click', () => {
-      clearInterval(state.interval);
-      state.running = false;
-      state.remain = state.total;
-      disp.textContent = formatMMSS(state.total);
-      disp.style.color = '';
-      active.classList.remove('paused');
-      active.querySelector('[data-toggle]').textContent = '▶ Старт';
-      active.querySelector('[data-toggle]').addEventListener('click', function once() {
-        state.running = true;
-        active.classList.remove('paused');
-        active.querySelector('[data-toggle]').textContent = '⏸ Пауза';
-        state.interval = setInterval(tick, 1000);
-      }, { once: true });
-    });
-
-    const save = active.querySelector('[data-save]');
-    if (save) {
-      save.addEventListener('click', () => {
-        const input = active.querySelector('input[type="number"]');
-        const v = parseFloat(input.value);
-        if (v > 0 && v < 1440) {
-          localStorage.setItem(`tm_${key}`, String(v));
-          clearInterval(state.interval);
-          state.total = v * 60;
-          state.remain = v * 60;
-          state.running = true;
-          disp.textContent = formatMMSS(state.remain);
-          disp.style.color = '';
-          active.classList.remove('paused');
-          state.interval = setInterval(tick, 1000);
-        }
-      });
-    }
-  }
-
-  function beep() {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const o = ctx.createOscillator();
-    const g = ctx.createGain();
-    o.connect(g); g.connect(ctx.destination);
-    o.frequency.value = 880; o.type = 'sine';
-    g.gain.setValueAtTime(0.2, ctx.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
-    o.start(); o.stop(ctx.currentTime + 0.5);
-  }
-
-  // ─── UTILITIES ───────────────────────────────────────────────────
-  function loadingHTML() {
-    return `<div class="loading"><div class="spin"></div><div>Загрузка...</div></div>`;
-  }
-  function escapeHTML(s) {
-    if (s == null) return '';
-    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  }
-  function escapeAttr(s) { return escapeHTML(s).replace(/"/g, '&quot;'); }
-  function formatMin(m) {
-    if (m < 1) return (m*60).toFixed(0)+' сек';
-    return Number.isInteger(m) ? `${m}` : m.toFixed(1);
-  }
-  function formatMMSS(sec) {
-    sec = Math.max(0, Math.floor(sec));
-    const m = Math.floor(sec / 60), s = sec % 60;
-    return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-  }
-  function hash(s) {
-    let h = 0;
-    for (let i = 0; i < s.length; i++) h = ((h<<5)-h) + s.charCodeAt(i) | 0;
-    return Math.abs(h).toString(36);
-  }
-  function plural(n, one, few, many) {
-    const mod10 = n % 10, mod100 = n % 100;
-    if (mod10 === 1 && mod100 !== 11) return one;
-    if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) return few;
-    return many;
-  }
-  function totalServings(d) {
-    return (d.servings.adult || 0) + (d.servings.kid || 0);
-  }
-  function difficultyLabel(d) {
-    return { easy: 'легко', medium: 'средне', hard: 'сложно' }[d || 'easy'];
-  }
-  function tagLabel(t) {
-    const map = {
-      quick: '⚡ быстро', make_ahead: '📅 заранее', freezer_friendly: '❄ заморозка',
-      one_pot: '🍲 одна посуда', no_cook: '🌿 без готовки', high_protein: '💪 белок',
-      kid_approved: '👶 для детей', batch_cooking: '📦 партия'
-    };
-    return map[t] || t;
-  }
-  function sourceUrl(key) {
-    const urls = {
-      usda_fsis_poultry: 'https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart',
-      usda_fsis_beef_whole: 'https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart',
-      usda_fsis_ground: 'https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart',
-      usda_fsis_fish: 'https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart',
-      usda_fsis_leftovers: 'https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart'
-    };
-    return urls[key] || '#';
-  }
-
-  // ─── BOOT ────────────────────────────────────────────────────────
-  boot();
-
-  // ─── SERVICE WORKER ──────────────────────────────────────────────
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js').catch(err => console.warn('SW:', err));
-    });
-  }
-  </script>
 </body>
 </html>
