@@ -2,14 +2,14 @@
 // Читает страницу рецепта из Notion, возвращает структурированные данные.
 //
 // Ответ:
-//   { format: "v1", data: {...valid recipe...}, warnings: [...],  last_edited, created_at, id }
+//   { format: "v1", data: {...}, warnings: [...], last_edited, created_at, id }
 //   { format: "v0", blocks: [...], last_edited, created_at, id }   ← legacy fallback
-//   { error: "...", details: [...] }                                ← невалидный JSON
+//   { error: "...", details: [...] }                                 ← невалидный JSON
 
 import { validate } from '../lib/validator.mjs';
 
 const NOTION_TOKEN = process.env.NOTION_TOKEN;
-const NOTION_VERSION = '2022-06-28';
+const NOTION_VERSION = '2025-09-03';
 
 export default async function handler(req, res) {
   const { id } = req.query;
@@ -18,7 +18,6 @@ export default async function handler(req, res) {
   try {
     const pageId = normalizeId(id);
 
-    // Параллельно: свойства страницы + блоки
     const [pageMeta, blocks] = await Promise.all([
       fetchPageMeta(pageId),
       fetchAllBlocks(pageId)
@@ -51,7 +50,6 @@ export default async function handler(req, res) {
         });
       }
 
-      // Проверка мажорной версии
       const schemaVersion = String(parsed.schema || '');
       const major = schemaVersion.split('.')[0];
       if (major !== '1') {
@@ -80,8 +78,7 @@ export default async function handler(req, res) {
       });
     }
 
-    // FALLBACK: старый формат — возвращаем блоки как раньше
-    // Парсер v0 живёт в index.html для обратной совместимости миграции
+    // FALLBACK: старый формат
     const v0Blocks = await hydrateLegacyBlocks(blocks);
     return res.status(200).json({
       format: 'v0',
@@ -94,12 +91,10 @@ export default async function handler(req, res) {
   }
 }
 
-// ─── Notion API helpers ──────────────────────────────────────────────
-
 async function notionFetch(path) {
   const r = await fetch(`https://api.notion.com/v1${path}`, {
     headers: {
-      'Authorization': `Bearer ${NOTION_TOKEN}`,
+      'Authorization': `Bearer ${NOTION_TOKEN.trim()}`,
       'Notion-Version': NOTION_VERSION
     }
   });
@@ -123,7 +118,6 @@ async function fetchAllBlocks(parentId) {
   return all;
 }
 
-// Для legacy формата — таблицам нужны дочерние запросы (table_row)
 async function hydrateLegacyBlocks(blocks) {
   const out = [];
   for (const b of blocks) {
@@ -137,10 +131,7 @@ async function hydrateLegacyBlocks(blocks) {
   return out;
 }
 
-// ─── helpers ─────────────────────────────────────────────────────────
-
 function normalizeId(id) {
-  // Принимаем как UUID с дефисами, так и сплющенный
   const hex = id.replace(/-/g, '');
   if (!/^[0-9a-f]{32}$/i.test(hex)) throw new Error('Invalid Notion page ID');
   return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
